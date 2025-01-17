@@ -18,9 +18,6 @@ export default function Sidebar({handleSidebar}) {
                 <div className="bot text-center">
                     <div className="wrap">
                         <div className="mb-20">
-                            <img src="/images/menu-left/img-bot.png" alt="" />
-                        </div>
-                        <div className="mb-20">
                             <h6>Hi, how can we help?</h6>
                             <div className="text">Contact us if you have any assistance, we will contact you as soon as
                                 possible</div>

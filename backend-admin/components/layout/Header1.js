@@ -88,7 +88,8 @@ export default function Header1({ scroll, isMobileMenu, handleSidebar, handleOff
                                 </Menu.Items>
                             </Menu>
                         </div>
-                        <FullScreenButton />                     
+                        <FullScreenButton />  
+                        <div className="setting cursor-pointer" onClick={handleOffcanvas}><i className="icon-settings" /></div>                   
                         <div className="popup-wrap user type-header">
                             <Menu as="div" className="dropdown">
                                 <Menu.Button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
@@ -128,10 +129,6 @@ export default function Header1({ scroll, isMobileMenu, handleSidebar, handleOff
                                 </Menu.Items>
                             </Menu>
                         </div>
-                        <div className="divider" />
-
-                        <div className="setting cursor-pointer" onClick={handleOffcanvas}><i className="icon-settings" /></div>
-
                     </div>
                 </div>
             </div>
