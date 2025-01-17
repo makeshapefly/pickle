@@ -5,6 +5,7 @@ import GetUser from "@/components/user/GetUser"
 export default async function Home() {
 
     const webUser = await GetUser()
+    console.log(JSON.stringify(webUser))
 
     return (
         <>

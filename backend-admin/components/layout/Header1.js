@@ -97,7 +97,7 @@ export default function Header1({ scroll, isMobileMenu, handleSidebar, handleOff
                                             <img src="/images/avatar/user-1.png" alt="" />
                                         </span>
                                         <span className="flex flex-column">
-                                            <span className="body-title mb-2">{user.firstName}</span>
+                                            <span className="body-title mb-2">{user && user.firstName}</span>
                                             <span className="text-tiny">Admin</span>
                                         </span>
                                     </span>
