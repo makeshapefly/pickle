@@ -3,7 +3,6 @@ import { Menu } from '@headlessui/react'
 import dynamic from 'next/dynamic'
 import Link from "next/link"
 import FullScreenButton from '../elements/FullScreenButton'
-import Language from '../elements/Language'
 import { SignOutButton } from "../signout/SignOutButton";
 const ThemeSwitch = dynamic(() => import('../elements/ThemeSwitch'), {
     ssr: false,
