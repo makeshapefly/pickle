@@ -8,6 +8,7 @@ import ProductOverview2 from "@/components/sections/ProductOverview2"
 import ProductOverview3 from "@/components/sections/ProductOverview3"
 import Revenue1 from "@/components/sections/Revenue1"
 import TopCountries2 from "@/components/sections/TopCountries2"
+import GetUser from "@/components/user/GetUser"
 export default function Home2() {
 
     return (
