@@ -32,3 +32,14 @@ CREATE TABLE role (
 );
 
 /*insert into role(role, user_id) values ('ADMIN', '43ed3637-4830-4e55-ba74-3cf9c75c52db') */
+
+CREATE TABLE member (
+  id uuid DEFAULT gen_random_uuid(),
+  email VARCHAR(100),
+  first_name VARCHAR(100),
+  last_name  VARCHAR(100),
+  created_at DATE,
+  PRIMARY KEY (id),
+);
+
+/*insert into member(email, first_name, last_name, created_at) values ('tony@tony.com', 'Tony', 'Turner', '2024-12-06') */
