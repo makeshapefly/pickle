@@ -4,7 +4,15 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://86.148.56.156:8081', 'http://86.148.56.156', '*'],
+    origin: [
+      'http://86.148.56.156:8081',
+      'http://86.148.56.156',
+      '*',
+      'http://localhost:8081',
+      'http://localhost',
+      'https://pickle-backend-1o6qombx2-makeshapeflys-projects.vercel.app/',
+      'https://pickle-backend-1o6qombx2-makeshapeflys-projects.vercel.app',
+    ],
     credentials: true,
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
     preflightContinue: false,
