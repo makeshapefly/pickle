@@ -19,17 +19,15 @@ import Footer1 from './Footer1'
 import Header1 from "./Header1"
 import Offcanvas from "./Offcanvas"
 import Sidebar from './Sidebar'
-
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
-export default function Layout({ headerStyle, breadcrumbTitleParent, breadcrumbTitle, children, boxed, menuIconHover, menuIconDefault }) {
+export default function Layout({ headerStyle, breadcrumbTitleParent, breadcrumbTitle, children, boxed, menuIconHover, menuIconDefault, user }) {
     // Moblile Menu
     const [isSidebar, setSidebar] = useState(false)
     const handleSidebar = () => setSidebar(!isSidebar)
 
     const [isOffcanvas, setIsOffcanvas] = useState(false)
     const handleOffcanvas = () => setIsOffcanvas(!isOffcanvas)
-
 
     return (
         <>
@@ -57,7 +55,7 @@ export default function Layout({ headerStyle, breadcrumbTitleParent, breadcrumbT
                     `}>
                             <Sidebar handleSidebar={handleSidebar} />
                             <div className="section-content-right">
-                                <Header1 isSidebar={isSidebar} handleSidebar={handleSidebar} handleOffcanvas={handleOffcanvas} />
+                                <Header1 isSidebar={isSidebar} handleSidebar={handleSidebar} handleOffcanvas={handleOffcanvas} user={user} />
                                 <div className="main-content">
                                     <div className="main-content-inner">
                                         <div className="main-content-wrap">

@@ -1,13 +1,17 @@
 import Layout from "@/components/layout/Layout"
-import Goal1 from "@/components/sections/Goal1"
-export default function Home() {
+import MyClub from "@/components/sections/MyClub"
+import GetUser from "@/components/user/GetUser"
+
+export default async function Home() {
+
+    const webUser = await GetUser()
 
     return (
         <>
 
-            <Layout>
-                <div className="tf-section-4 mb-30">
-                    <Goal1 />
+            <Layout user={webUser}>
+                <div className="tf-section-3 mb-30">
+                    <MyClub user={webUser} />
                 </div>
                 <div className="tf-section-8 mb-30">
                 </div>

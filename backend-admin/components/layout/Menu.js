@@ -69,172 +69,34 @@ export default function Menu() {
         <div className="center">
             <div className="center-item">
                 <div className="center-heading">Main Home</div>
+
                 <ul className="menu-list">
-                    <li className={`menu-item has-children ${activeAccordion === 1 ? 'active' : ''}`}>
-                        <a className="menu-item-button" onClick={() => handleAccordion(1)}>
+                    <li className={`menu-item ${router === '/' ? 'active' : ''}`}>
+                        <Link href="/" className={isSubMenuItemActive('/') ? 'active' : ''}>
                             <div className="icon"><i className="icon-grid" /></div>
-                            <div className="text">Dashboard</div>
-                        </a>
-                        <ul className="sub-menu" style={{ display: `${activeAccordion === 1 ? "block" : "none"}` }}>
-                            <li className="sub-menu-item">
-                                <Link href="/" className={isSubMenuItemActive('/') ? 'active' : ''}>
-                                    <div className="text">Home 01</div>
-                                </Link>
-                            </li>
-                            <li className="sub-menu-item">
-                                <Link href="/home-2" className={isSubMenuItemActive('/home-2') ? 'active' : ''}>
-                                    <div className="text">Home 02</div>
-                                </Link>
-                            </li>
-                            <li className="sub-menu-item">
-                                <Link href="/home-3" className={isSubMenuItemActive('/home-3') ? 'active' : ''}>
-                                    <div className="text">Home 03</div>
-                                </Link>
-                            </li>
-                            <li className="sub-menu-item">
-                                <Link href="/home-4" className={isSubMenuItemActive('/home-4') ? 'active' : ''}>
-                                    <div className="text">Home 04</div>
-                                </Link>
-                            </li>
-                            <li className="sub-menu-item">
-                                <Link href="/home-boxed" className={isSubMenuItemActive('/home-boxed') ? 'active' : ''}>
-                                    <div className="text">Home Boxed</div>
-                                </Link>
-                            </li>
-                            <li className="sub-menu-item">
-                                <Link href="/home-menu-icon-hover" className={isSubMenuItemActive('/home-menu-icon-hover') ? 'active' : ''}>
-                                    <div className="text">Home Menu Icon Hover</div>
-                                </Link>
-                            </li>
-                            <li className="sub-menu-item">
-                                <Link href="/home-menu-icon-default" className={isSubMenuItemActive('/home-menu-icon-default') ? 'active' : ''}>
-                                    <div className="text">Home Menu Icon Default</div>
-                                </Link>
-                            </li>
-                        </ul>
-                    </li>
+                            <div className="text">Home</div>
+                        </Link>
+                    </li>                  
                 </ul>
             </div>
             <div className="center-item">
                 <div className="center-item">
                     <div className="center-heading">All page</div>
                     <ul className="menu-list">
-                        <li className={`menu-item has-children ${activeAccordion === 2 ? 'active' : ''}`}>
-                            <a className="menu-item-button" onClick={() => handleAccordion(2)}>
-                                <div className="icon"><i className="icon-shopping-cart" /></div>
-                                <div className="text">Ecommerce</div>
-                            </a>
-                            <ul className="sub-menu" style={{ display: `${activeAccordion === 2 ? "block" : "none"}` }}>
-                                <li className="sub-menu-item">
-                                    <Link href="/add-product" className={isSubMenuItemActive('/add-product') ? 'active' : ''}>
-                                        <div className="text">Add Product</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/product-list" className={isSubMenuItemActive('/product-list') ? 'active' : ''}>
-                                        <div className="text">Product List</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/product-detail-1" className={isSubMenuItemActive('/product-detail-1') ? 'active' : ''}>
-                                        <div className="text">Product Detail 1</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/product-detail-2" className={isSubMenuItemActive('/product-detail-2') ? 'active' : ''}>
-                                        <div className="text">Product Detail 2</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/product-detail-3" className={isSubMenuItemActive('/product-detail-3') ? 'active' : ''}>
-                                        <div className="text">Product Detail 3</div>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className={`menu-item has-children ${activeAccordion === 3 ? 'active' : ''}`}>
-                            <a className="menu-item-button" onClick={() => handleAccordion(3)}>
-                                <div className="icon"><i className="icon-layers" /></div>
-                                <div className="text">Category</div>
-                            </a>
-                            <ul className="sub-menu" style={{ display: `${activeAccordion === 3 ? "block" : "none"}` }}>
-                                <li className="sub-menu-item">
-                                    <Link href="/category-list" className={isSubMenuItemActive('/category-list') ? 'active' : ''}>
-                                        <div className="text">Category list</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/new-category" className={isSubMenuItemActive('/new-category') ? 'active' : ''}>
-                                        <div className="text">New category</div>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className={`menu-item has-children ${activeAccordion === 4 ? 'active' : ''}`}>
-                            <a className="menu-item-button" onClick={() => handleAccordion(4)}>
-                                <div className="icon"><i className="icon-box" /></div>
-                                <div className="text">Attributes</div>
-                            </a>
-                            <ul className="sub-menu" style={{ display: `${activeAccordion === 4 ? "block" : "none"}` }}>
-                                <li className="sub-menu-item">
-                                    <Link href="/attributes" className={isSubMenuItemActive('/attributes') ? 'active' : ''}>
-                                        <div className="text">Attributes</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/add-attributes" className={isSubMenuItemActive('/add-attributes') ? 'active' : ''}>
-                                        <div className="text">Add attributes</div>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className={`menu-item has-children ${activeAccordion === 5 ? 'active' : ''}`}>
-                            <a className="menu-item-button" onClick={() => handleAccordion(5)}>
-                                <div className="icon"><i className="icon-file-plus" /></div>
-                                <div className="text">Order</div>
-                            </a>
-                            <ul className="sub-menu" style={{ display: `${activeAccordion === 5 ? "block" : "none"}` }}>
-                                <li className="sub-menu-item">
-                                    <Link href="/oder-list" className={isSubMenuItemActive('/oder-list') ? 'active' : ''}>
-                                        <div className="text">Order list</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/oder-detail" className={isSubMenuItemActive('/oder-detail') ? 'active' : ''}>
-                                        <div className="text">Order detail</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/oder-tracking" className={isSubMenuItemActive('/oder-tracking') ? 'active' : ''}>
-                                        <div className="text">Order tracking</div>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </li>
                         <li className={`menu-item has-children ${activeAccordion === 6 ? 'active' : ''}`}>
                             <a className="menu-item-button" onClick={() => handleAccordion(6)}>
                                 <div className="icon"><i className="icon-user" /></div>
-                                <div className="text">User</div>
+                                <div className="text">Users</div>
                             </a>
                             <ul className="sub-menu" style={{ display: `${activeAccordion === 6 ? "block" : "none"}` }}>
                                 <li className="sub-menu-item">
                                     <Link href="/all-user" className={isSubMenuItemActive('/all-user') ? 'active' : ''}>
-                                        <div className="text">All user</div>
+                                        <div className="text">All users</div>
                                     </Link>
                                 </li>
                                 <li className="sub-menu-item">
                                     <Link href="/add-new-user" className={isSubMenuItemActive('/add-new-user') ? 'active' : ''}>
                                         <div className="text">Add new user</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/login" className={isSubMenuItemActive('/login') ? 'active' : ''}>
-                                        <div className="text">Login</div>
-                                    </Link>
-                                </li>
-                                <li className="sub-menu-item">
-                                    <Link href="/sign-up" className={isSubMenuItemActive('/sign-up') ? 'active' : ''}>
-                                        <div className="text">Sign up</div>
                                     </Link>
                                 </li>
                             </ul>
@@ -381,24 +243,6 @@ export default function Menu() {
                     </li>
                 </ul>
             </div>
-            <div className="center-item">
-                <div className="center-heading">Connect us</div>
-                <ul className="wg-social">
-                    <li>
-                        <Link href="#"><i className="icon-facebook" /></Link>
-                    </li>
-                    <li className="active">
-                        <Link href="#"><i className="icon-twitter" /></Link>
-                    </li>
-                    <li>
-                        <Link href="#"><i className="icon-linkedin" /></Link>
-                    </li>
-                    <li>
-                        <Link href="#"><i className="icon-instagram" /></Link>
-                    </li>
-                </ul>
-            </div>
-
         </div>
     )
 }
