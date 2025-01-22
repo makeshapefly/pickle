@@ -1,0 +1,5 @@
+com/pickleapp/api_service/entity/Member.class
+com/pickleapp/api_service/controller/MemberController.class
+com/pickleapp/api_service/ApiServiceApplication.class
+com/pickleapp/api_service/repository/MemberRepository.class
+com/pickleapp/api_service/service/MemberService.class
