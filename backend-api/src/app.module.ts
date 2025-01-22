@@ -5,15 +5,11 @@ import { AppService } from './app.service';
 import { Member } from './entity/member.entity';
 import { MemberModule } from './member.module';
 import { ConfigModule } from '@nestjs/config';
-import { ClerkClientProvider } from './provider/clerk-client.provider';
-import { AuthModule } from './auth/auth.module';
-import { ClerkAuthGuard } from './auth/clerk-auth.guard'
 import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     MemberModule,
-    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -32,9 +28,6 @@ import { APP_GUARD } from '@nestjs/core';
     TypeOrmModule.forFeature([Member]),
   ],
   controllers: [AppController],
-  providers: [AppService, ClerkClientProvider, {
-    provide: APP_GUARD,
-    useClass: ClerkAuthGuard,
-  }],
+  providers: [AppService],
 })
 export class AppModule {}
