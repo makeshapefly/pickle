@@ -2,6 +2,7 @@ import { Controller, Get, Inject, Injectable, Ip, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { MemberService } from '../provider/member.service';
 
+//members controller
 @Controller('member')
 @Injectable({ scope: Scope.REQUEST })
 export class MemberController {
