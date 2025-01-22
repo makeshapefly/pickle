@@ -9,7 +9,7 @@ export class MemberController {
   constructor(private readonly memberService: MemberService, @Inject(REQUEST) private readonly request: Request) {}
   @Get() 
   findAll() {
-    console.log(this.request.headers)
+    //console.log(this.request.headers)
     return this.memberService.getAllMembers();
   }
 }
