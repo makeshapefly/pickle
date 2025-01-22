@@ -20,10 +20,18 @@ const VerifySignIn = () => {
     const { isLoaded, signIn, setActive } = useSignIn()
 
     useEffect(() => {
+        memberDetails()
         if (error) {
             Alert.alert('An error occurred', error);
         }
     }, [error]);
+
+    const memberDetails = async () => {
+        alert(process.env.EXPO_PUBLIC_DB_URL + 'member')
+        const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'member')
+        const data = await response.json()
+        alert(data)
+    }
 
     async function handleVerification(text: string) {
         //e.preventDefault()
@@ -41,8 +49,8 @@ const VerifySignIn = () => {
             // and redirect the user
             if (signInAttempt.status === 'complete') {
                 await setActive({ session: signInAttempt.createdSessionId })
-
-                router.push('/')
+                memberDetails()
+                //router.push('/')
             } else {
                 // If the status is not complete, check why. User may need to
                 // complete further steps.
