@@ -15,4 +15,16 @@ public class MemberService {
     public Iterable<Member> getAllMembers() {
         return repository.findAll();
     }
+    public Member getMemberByPhone(String phone) {
+        return repository.findByMobilePhone(phone);
+    }
+
+    public String createNewMember(Member member) {
+        try {
+            repository.save(member);
+            return "ok";
+        } catch (Exception ex) {
+            return "error";
+        }
+    }
 }

@@ -35,11 +35,12 @@ CREATE TABLE role (
 
 CREATE TABLE member (
   id uuid DEFAULT gen_random_uuid(),
+  mobile_phone VARCHAR(15),
   email VARCHAR(100),
   first_name VARCHAR(100),
   last_name  VARCHAR(100),
   created_at DATE,
-  PRIMARY KEY (id),
+  PRIMARY KEY (id)
 );
 
 /*insert into member(email, first_name, last_name, created_at) values ('tony@tony.com', 'Tony', 'Turner', '2024-12-06') */

@@ -27,10 +27,9 @@ const VerifySignIn = () => {
     }, [error]);
 
     const memberDetails = async () => {
-        alert(process.env.EXPO_PUBLIC_DB_URL + 'member')
-        const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'member')
+        const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'member/')
         const data = await response.json()
-        alert(data)
+        //alert(JSON.stringify(data))
     }
 
     async function handleVerification(text: string) {

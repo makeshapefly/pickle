@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from 'react-native'
-import React from 'react'
+import React, {useContext} from 'react'
 import { COLORS, images } from '../../constants'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
@@ -13,6 +13,7 @@ import SavingCard from '../../components/SavingCard'
 import { ScrollView } from 'react-native-virtualized-view'
 import { useClerk } from '@clerk/clerk-react'
 import * as Linking from 'expo-linking'
+import { UserStateContext } from "../(auth)/UserStateContext"
 
 type Nav = {
   navigate: (value: string) => void
@@ -21,6 +22,9 @@ type Nav = {
 const HomeScreen = () => {
   const { navigate } = useNavigation<Nav>();
   const { signOut } = useClerk()
+
+  const { user, http } = useContext(UserStateContext)
+      const [userDetails, setUserDetails] = user
 
   const handleSignOut = async () => {
     try {
@@ -123,7 +127,7 @@ const HomeScreen = () => {
         <View style={styles.headerContainer}>
           <View>
             <Text style={styles.greeting}>Welcome back</Text>
-            <Text style={styles.username}>Alexander Michael</Text>
+            <Text style={styles.username}>{userDetails.firstName}</Text>
             <Button title="Sign out" onPress={handleSignOut} />
           </View>
           <TouchableOpacity

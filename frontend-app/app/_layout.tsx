@@ -7,6 +7,8 @@ import { FONTS } from '../constants/fonts';
 import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo'
 import { tokenCache } from './cache'
 
+import { StateProvider } from './(auth)/UserStateContext'
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -55,7 +57,8 @@ function RootLayoutNav() {
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
       <ClerkLoaded>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <StateProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen name="(auth)/verifyaccount" options={{ headerShown: false }} />
@@ -86,8 +89,10 @@ function RootLayoutNav() {
               <Stack.Screen name="changepassword" options={{ headerShown: false }} />
               <Stack.Screen name="changepersonalprofile" options={{ headerShown: false }} />
               <Stack.Screen name="helpcenter" options={{ headerShown: false }} />
+              <Stack.Screen name="setupuserdetails" options={{ headerShown: false }} />
             </Stack>
-        </ThemeProvider>
+          </ThemeProvider>
+        </StateProvider>
       </ClerkLoaded>
     </ClerkProvider>
   );

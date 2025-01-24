@@ -1,18 +1,25 @@
+import React, { useContext } from "react"
 import { Redirect } from 'expo-router'
-import { useSignUp, useAuth, useSession } from '@clerk/clerk-expo'
+import { UserStateContext } from "./(auth)/UserStateContext"
 
 const Index = () => {
-  const { isSignedIn } = useAuth()
-  const { isLoaded } = useSignUp()
+  const { user, http } = useContext(UserStateContext)
+  const [httpStatus, setHttpStatus] = http
 
-  //alert(isSignedIn)
+  //alert(JSON.stringify(httpStatus))
+  if (httpStatus == 404) {
+    //user does not exist
+    return <Redirect href={"/setupuserdetails"} />
+  }
 
-  if (isLoaded && isSignedIn) {
-    return <Redirect href={'/(tabs)'} />
+  if (httpStatus == 200) {
+    return <Redirect href={"/(tabs)"} />
   }
-  if (isLoaded && !isSignedIn) {
-    return <Redirect href={'/signin'} />
+
+  if (httpStatus == -1) {
+    return <Redirect href={"/signin"} />
   }
+
 }
 
 export default Index;

@@ -1,4 +1,5 @@
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/ApiServiceApplication.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/SecurityConfig.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/controller/MemberController.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Member.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/repository/MemberRepository.java

@@ -6,26 +6,29 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 public class Member {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     private String firstName;
 
     private String lastName;
 
+    private String mobilePhone;
+
     private String email;
 
     private Date createdAt;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -43,6 +46,14 @@ public class Member {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 
     public Date getCreatedAt() {

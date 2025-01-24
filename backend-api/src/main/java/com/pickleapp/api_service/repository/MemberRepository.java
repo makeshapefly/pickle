@@ -5,4 +5,5 @@ import java.util.UUID;
 
 public interface MemberRepository extends CrudRepository<Member, UUID> {
 
+    Member findByMobilePhone(String phone);
 }

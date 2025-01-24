@@ -139,7 +139,7 @@ return (
       <ScrollView>
       <View style={{ alignItems: "center" }}>
             <Image
-              source={illustrations.forgetPassword}
+              source={illustrations.pickleball}
               contentFit='contain'
               style={styles.illustration}
             />
