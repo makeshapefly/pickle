@@ -1501,10 +1501,10 @@ a:focus {
 	padding: 2px 8px;
 	gap: 10px;
 	border-radius: 4px;
-	background: #FFF2ED;
-	color: #FF5200;
-	font-size: 12px;
-	font-weight: 500;
+	background: red;
+	color: #FFF;
+	font-size: 16px;
+	font-weight: 800;
 }
 
 .block-available {
@@ -2246,6 +2246,50 @@ a:focus {
 	padding: 6px 10px 6px 38px;
 	gap: 6px;
 	border-radius: 1000px;
+	background: #F0F5F9;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+.radio-buttons .item .days label {
+	width: max-content;
+	height: 36px;
+	cursor: pointer;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+	justify-content: end;
+	padding: 10px 10px 10px 38px;
+	gap: 6px;
+	border-radius: 1000px;
+	background: #F0F5F9;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+.radio-buttons .days label {
+	width: max-content;
+	height: 36px;
+	cursor: pointer;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+	justify-content: end;
+	padding: 10px 10px 10px 38px;
+	gap: 20px;
+	border-radius: 0px;
 	background: #F0F5F9;
 	-webkit-transition: all 0.3s ease;
 	-moz-transition: all 0.3s ease;
@@ -3301,7 +3345,7 @@ form input[type=color] {
 	font-family: "Inter", sans-serif;
 	font-weight: 400;
 	line-height: 20px;
-	background-color: transparent;
+	background-color: #FAF7F7;
 	border: 1px solid var(--Input);
 	border-radius: 12px;
 	color: var(--Heading);
@@ -3383,7 +3427,6 @@ fieldset {
 
 .select::after {
 	position: absolute;
-	content: "\e934";
 	right: 22px;
 	top: 50%;
 	font-family: "icomoon";

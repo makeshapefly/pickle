@@ -9,6 +9,7 @@ import Revenue2 from "@/components/sections/Revenue2"
 import Sales1 from "@/components/sections/Sales1"
 import Sales2 from "@/components/sections/Sales2"
 import Sales3 from "@/components/sections/Sales3"
+
 export default function Home4() {
 
     return (

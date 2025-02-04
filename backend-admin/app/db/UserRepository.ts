@@ -1,6 +1,5 @@
-import { Kysely } from 'kysely'
-import { expressionBuilder } from 'kysely'
-import { User, NewUser, UserUpdate, Database } from '@/lib/database/types'
+import { Kysely, expressionBuilder } from 'kysely'
+import { User, NewUser, Database } from '@/lib/database/types'
 
 export async function findUserByEmail(
     db: Kysely<Database>,

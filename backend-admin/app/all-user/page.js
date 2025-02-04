@@ -75,7 +75,7 @@ export default async function AllUser(props) {
                         </ul>
                     </div>
                     <div className="divider" />
-                        <Pagination users={totalUsers.length} />
+                        <Pagination users={totalUsers.length} itemsPerPage={itemsPerPage} />
                     </div>
             </Layout>
         </>

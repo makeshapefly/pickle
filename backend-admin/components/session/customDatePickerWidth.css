@@ -1,0 +1,9 @@
+.rdrCalendarWrapper {
+   width: 100%
+}
+
+.rdrMonth{
+   /* width: 27.667em; */
+   width: 100%;
+   font-size: 16px;
+ }

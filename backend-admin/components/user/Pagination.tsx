@@ -1,22 +1,25 @@
 'use client';
 
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
-export default function Pagination({ users }: { users: number }) {
+export default function Pagination({ users, itemsPerPage }) {
     const { replace } = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const itemsPerPage = 1
+    console.log("fyfyfyt: " + itemsPerPage)
+
+    //const itemsPerPage = 3
     const [itemOffset, setItemOffset] = useState(0);
 
     const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    console.log("users: " + users);
+    console.log("itemsPerPage: " + itemsPerPage);
     //const currentItems = users.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(users / itemsPerPage);
+    console.log("pageCount: " + pageCount);
 
     // Invoke when user click to request another page.
     const handlePageClick = (event: any) => {
@@ -28,7 +31,7 @@ export default function Pagination({ users }: { users: number }) {
 
         const params = new URLSearchParams(searchParams.toString());
         console.log("params: " + JSON.stringify(params.get("query")))
-        const pageNumber = (newOffset.valueOf() * itemsPerPage).toString()
+        const pageNumber = (newOffset.valueOf()).toString()
         params.set('page', pageNumber);
         replace(`${pathname}?${params.toString()}`);
     };

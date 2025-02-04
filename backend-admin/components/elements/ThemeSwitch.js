@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 const ThemeSwitch = ({ radioBtn }) => {
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light-theme')
 
-    const lightLogo = '/images/logo/logo.png'
+    const lightLogo = '/images/logo/pickleball.png'
     const darkLogo = '/images/logo/logo-dark.png'
 
     const toggleTheme = () => {

@@ -16,7 +16,9 @@ CREATE TABLE users (
 CREATE TABLE organisation (
   id SERIAL PRIMARY KEY,
   org_name VARCHAR(100) NOT NULL,
-  created_at DATE
+  join_code VARCHAR(8),
+  created_at DATE,
+  PRIMARY KEY (id),
 );
 
 /*insert into organisation(org_name, created_at) values ('NONE', '2024-12-06') */
@@ -44,3 +46,28 @@ CREATE TABLE member (
 );
 
 /*insert into member(email, first_name, last_name, created_at) values ('tony@tony.com', 'Tony', 'Turner', '2024-12-06') */
+
+/* join table */
+CREATE TABLE organisation_member (
+  member_id uuid,
+  organisation_id integer,
+  PRIMARY KEY (member_id, organisation_id)
+);
+/*insert into organisation_member values('c0e87981-fd82-4c4b-9b08-d59329392df1', 1)*/
+
+CREATE TABLE session (
+  id uuid DEFAULT gen_random_uuid(),
+  name VARCHAR(100),
+  recurring boolean,
+  start_date DATE,
+  end_date DATE,
+  days_of_week TEXT[] UNIQUE,
+  price DECIMAL(4,2),
+  config jsonb,
+  created_at DATE,
+  organisation_id integer,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_organisation
+      FOREIGN KEY(organisation_id)
+        REFERENCES organisation(id)
+);

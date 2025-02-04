@@ -1,6 +1,10 @@
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/ApiServiceApplication.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/SecurityConfig.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/controller/MemberController.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/controller/SessionController.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Member.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Session.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/repository/MemberRepository.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/repository/SessionRepository.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/service/MemberService.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/service/SessionService.java

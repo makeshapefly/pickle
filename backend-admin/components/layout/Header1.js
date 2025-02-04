@@ -16,7 +16,7 @@ export default function Header1({ scroll, isMobileMenu, handleSidebar, handleOff
                 <div className="wrap">
                     <div className="header-left">
                         <Link href="/">
-                            <img id="logo_header_mobile" alt="" src="/images/logo/logo.png" data-light="images/logo/logo.png" data-dark="images/logo/logo-dark.png" data-width="154px" data-height="52px" data-retina="images/logo/logo@2x.png" />
+                            <img id="logo_header_mobile" alt="" src="/images/logo/pickleball.png" data-light="images/logo/pickleball.png" data-dark="images/logo/pickleball.png" width="52px" data-width="52px" data-height="52px" data-retina="images/logo/logo@2x.png" />
                         </Link>
                         <div className="button-show-hide" onClick={handleSidebar}>
                             <i className="icon-menu-left" />
@@ -89,7 +89,7 @@ export default function Header1({ scroll, isMobileMenu, handleSidebar, handleOff
                             </Menu>
                         </div>
                         <FullScreenButton />  
-                        <div className="setting cursor-pointer" onClick={handleOffcanvas}><i className="icon-settings" /></div>                   
+                        {/*<div className="setting cursor-pointer" onClick={handleOffcanvas}><i className="icon-settings" /></div>     */}              
                         <div className="popup-wrap user type-header">
                             <Menu as="div" className="dropdown">
                                 <Menu.Button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
