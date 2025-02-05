@@ -5,6 +5,7 @@ export interface Database {
   organisation: OrganisationTable;
   role: RoleTable;
   member: MemberTable;
+  session: SessionTable;
   organisation_member: OrganisationembersTable;
 }
 
@@ -28,6 +29,20 @@ export interface RoleTable {
   id: Generated<string>;
   role: string;
   user_id: string;
+}
+
+export interface SessionTable {
+  id: Generated<string>;
+  name: string;
+  recurring: boolean,
+  startDate: Date,
+  endDate: Date,
+  sessionDate: Date,
+  days: string[],
+  price: number,
+  config: JSON,
+  organisation_id: number;
+  created_at: Date;
 }
 
 export interface MemberTable {
@@ -104,3 +119,7 @@ export type RoleUpdate = Updateable<RoleTable>
 export type MemberType = Selectable<MemberTable>
 export type NewMemberType = Insertable<MemberTable>
 export type MemberUpdateType = Updateable<MemberTable>
+
+export type Session = Selectable<SessionTable>
+export type NewSessionType = Insertable<SessionTable>
+export type SessionUpdateType = Updateable<SessionTable>

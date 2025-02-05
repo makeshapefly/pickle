@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useFormik } from "formik";
+import { addSession } from "@/app/actions/addSession";
 import * as Yup from "yup";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,6 +15,7 @@ import './customDatePickerWidth.css';
 const schema = (isTab2) =>
     Yup.object().shape({
         name: Yup.string().required(),
+        location: Yup.string().required(),
         startDate: Yup.string().when([], {
             is: () => isTab2 == 1,
             then: () => Yup.string().required(
@@ -36,12 +38,14 @@ const schema = (isTab2) =>
         }),
         price: Yup.string()
             .required("Price is required")
-            .matches(/^[0-9]+\.[0-9]{2}$|[0-9]+\.[0-9]{2}[^0-9]/, "Price format must be XX.XX")
+            .matches(/^[0-9]+\.[0-9]{2}$|[0-9]+\.[0-9]{2}[^0-9]/, "Price format must be XX.XX"),
+        payment: Yup.array().min(1, "You must select at least one approved payment method"),
+        window: Yup.number().required("Please enter an advanced booking window").min(1, "You can't have zero days or below").max(500, "You can't book more than 500 days in advance")
     });
 
 
 
-const AddSessionForm = () => {
+const AddSessionForm = ({user}) => {
     const [isTab2, setIsTab2] = useState(1)
     const handleTab2 = (i) => {
         setIsTab2(i)
@@ -50,11 +54,14 @@ const AddSessionForm = () => {
     const formik = useFormik({
         initialValues: {
             name: "",
+            location: "",
             startDate: "",
-            endDate: null,
+            endDate: "",
             sessionDate: "",
             days: [],
             price: "",
+            payment: [],
+            window: null,
         },
 
         // Pass the Yup schema to validate the form
@@ -64,8 +71,26 @@ const AddSessionForm = () => {
         onSubmit: async (values) => {
             // Make a request to your backend to store the data
             try {
-                console.log('days: ' + JSON.stringify(values))
-                console.log(isTab2)
+                let json = {}
+                json.name = values.name
+                json.location = values.location
+                json.recurring = isTab2 == 1 ? true : false
+                json.startDate = values.startDate
+                json.endDate = values.endDate
+                json.sessionDate = values.sessionDate
+                json.days = values.days
+                json.price = values.price
+                json.organisationId = user.organisation
+
+                let config = {}
+                config.window = values.window
+                config.payment = values.payment
+
+                json.config = JSON.stringify(config)
+
+                const result = await addSession(user, json)
+                formik.resetForm()
+                showToastMessage()
             } catch (error) {
                 console.log(error)
             }
@@ -75,7 +100,7 @@ const AddSessionForm = () => {
     const { errors, touched, values, handleChange, handleSubmit } = formik;
 
     const showToastMessage = () => {
-        toast.success("User created !", {
+        toast.success("Session created !", {
             position: "top-center"
         });
     };
@@ -98,7 +123,7 @@ const AddSessionForm = () => {
                     </div>
                     <div className="right flex-grow">
                         <fieldset>
-                            <input className="flex-grow" type="text" placeholder="Session Name, e.g. Thursday Pickleball" onChange={handleChange} name="name" id="name" value={values.name} tabIndex={0} style={{ fontSize: '2rem', width: '100%' }} />
+                            <input className="flex-grow" type="text" placeholder="Session Name, e.g. Thursday Pickleball" onChange={handleChange} name="name" id="name" value={values.name} tabIndex={0} maxlength="100" style={{ fontSize: '2rem', width: '100%' }} />
                         </fieldset>
                         {errors.name && touched.name ? (
                             <div style={{ marginTop: 10 }}>
@@ -106,9 +131,33 @@ const AddSessionForm = () => {
                             </div>
                         ) : null}
                     </div>
-
                 </div>
 
+                <div style={{ marginTop: 20 }}></div>
+
+                <div className="wg-box">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap14">
+                            <h5 className="mb-4">Location</h5>
+                        </div>
+                        <div className="body-text mb-2">
+                            {/*<img src="/images/bg-menu/serve.png" width="50px" alt="" />*/}
+                        </div>
+                    </div>
+                    <div className="left">
+                        <div className="body-text"><p>Provide a location for this session.</p></div>
+                    </div>
+                    <div className="right flex-grow">
+                        <fieldset>
+                            <input className="flex-grow" type="text" placeholder="Location" onChange={handleChange} name="location" id="location" value={values.location} tabIndex={1} maxlength="200" style={{ fontSize: '2rem', width: '100%' }} />
+                        </fieldset>
+                        {errors.location && touched.location ? (
+                            <div style={{ marginTop: 10 }}>
+                                <TextError id="location">{errors.location}</TextError>
+                            </div>
+                        ) : null}
+                    </div>
+                </div>
 
                 <div style={{ marginTop: 20 }}></div>
 
@@ -151,7 +200,7 @@ const AddSessionForm = () => {
                                                     <div className="body-text"><p>Select an end date for this session. <b>Leave blank if you want this session to run indefinitely.</b></p><p></p>&#160;<p></p></div>
 
                                                     <div className="select">
-                                                        <input type="date" name="date" onChange={handleChange} onClick={(e) => e.currentTarget.showPicker()} />
+                                                        <input type="date" name="endDate" onChange={handleChange} onClick={(e) => e.currentTarget.showPicker()} value={values.endDate} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -264,16 +313,33 @@ const AddSessionForm = () => {
                 <div className="wg-box">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap14">
-                            <h5 className="mb-4">Booking & Visibility</h5>
+                            <h5 className="mb-4">Booking Window</h5>
                         </div>
                         <div className="body-text mb-2">
+                            {/*<img src="/images/bg-menu/serve.png" width="50px" alt="" />*/}
                         </div>
                     </div>
                     <div className="left">
-                        <div className="body-text"><p>.</p></div>
+                        <div className="body-text"><p>Number of days before the session that players can book in.</p></div>
                     </div>
-                    <div className="right flex-grow">
+                    <div className="row">
+                        <div className="col-xl-4 mb-20">
+                            <div className="right flex-grow">
+                                <fieldset>
+                                    <input type="number" onChange={handleChange} name="window" id="window" value={values.window} tabIndex={0} style={{ fontSize: '2rem', width: '100%' }} />
+                                </fieldset>            
+                                {errors.window && touched.window ? (
+                                    <div style={{ marginTop: 10 }}>
+                                        <TextError id="window">{errors.window}</TextError>
+                                    </div>
+                                ) : null}
+                            </div>
+                        </div>
+                        <div className="col-xl-4 mb-20">
+                        <h5 className="mb-20">days</h5>
+                        </div>
                     </div>
+
                 </div>
 
                 <div style={{ marginTop: 20 }}></div>
@@ -286,16 +352,43 @@ const AddSessionForm = () => {
                         <div className="body-text mb-2">
                         </div>
                     </div>
-                    <div className="col-xl-6 mb-20">
-                        <fieldset>
-                            <div className="body-title mb-10">Price per session (£)</div>
-                            <input className="flex-grow" type="text" placeholder="Price" onChange={handleChange} name="price" id="price" value={values.price} tabIndex={0} style={{ fontSize: '2rem', width: '100%' }} />
-                        </fieldset>
-                        {errors.price && touched.price ? (
-                            <div style={{ marginTop: 10 }}>
-                                <TextError id="price">{errors.price}</TextError>
+                    <div className="row">
+                        <div className="col-xl-4 mb-20">
+                            <fieldset>
+                                <div className="body-title mb-10">Price per session (£)</div>
+                                <input className="flex-grow" type="text" placeholder="Price" onChange={handleChange} name="price" id="price" value={values.price} tabIndex={0} style={{ fontSize: '2rem', width: '100%' }} />
+                            </fieldset>
+                            {errors.price && touched.price ? (
+                                <div style={{ marginTop: 10 }}>
+                                    <TextError id="price">{errors.price}</TextError>
+                                </div>
+                            ) : null}
+                        </div>
+                        <div className="col-xl-1 mb-20"></div>
+                        <div className="col-xl-6 mb-20">
+                            <div className="body-title mb-20">Payment Methods Allowed</div>
+                            <div className="radio-buttons" style={{ display: 'inline', gap: 0 }}>
+                                <div className="row">
+                                    <div className="col-xl-4 mb-4 col-sm-4 col-4">
+                                        <div className="item days">
+                                            <input className="total-checkbox" type="checkbox" name="payment" value="Bank Transfer" onChange={formik.handleChange} />
+                                            <label htmlFor="STANDARD"><span className="body-title-2">Bank Transfer</span></label>
+                                        </div>
+                                    </div>
+                                    <div className="col-xl-4 mb-4 col-sm-4 col-4">
+                                        <div className="item days">
+                                            <input className="total-checkbox" type="checkbox" name="payment" value="Cash" onChange={formik.handleChange} />
+                                            <label htmlFor="STANDARD"><span className="body-title-2">Cash</span></label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        ) : null}
+                            {errors.payment && touched.payment ? (
+                                <div style={{ marginTop: 10 }}>
+                                    <TextError id="days">{errors.payment}</TextError>
+                                </div>
+                            ) : null}
+                        </div>
                     </div>
                 </div>
 

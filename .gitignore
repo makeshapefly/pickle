@@ -1,4 +1,4 @@
 node_modules/
 /admin-dashboard-fe/.next
 .next
-
+/backend-api/target

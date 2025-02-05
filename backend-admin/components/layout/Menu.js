@@ -33,7 +33,7 @@ export default function Menu() {
             '/add-new-user': 6,
             '/login': 6,
             '/sign-up': 6,
-            '/all-roles': 7,
+            '/all-sessions': 7,
             '/create-session': 7,
             '/members': 0,
             '/report': 0,
@@ -95,7 +95,7 @@ export default function Menu() {
                             </a>
                             <ul className="sub-menu" style={{ display: `${activeAccordion === 7 ? "block" : "none"}` }}>
                                 <li className="sub-menu-item">
-                                    <Link href="/all-roles" className={isSubMenuItemActive('/all-roles') ? 'active' : ''}>
+                                    <Link href="/all-sessions" className={isSubMenuItemActive('/all-sessions') ? 'active' : ''}>
                                         <div className="text">All sessions</div>
                                     </Link>
                                 </li>

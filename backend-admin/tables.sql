@@ -58,9 +58,11 @@ CREATE TABLE organisation_member (
 CREATE TABLE session (
   id uuid DEFAULT gen_random_uuid(),
   name VARCHAR(100),
+  location VARCHAR(200),
   recurring boolean,
   start_date DATE,
   end_date DATE,
+  session_date DATE,
   days_of_week TEXT[] UNIQUE,
   price DECIMAL(4,2),
   config jsonb,

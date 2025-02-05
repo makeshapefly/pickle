@@ -9,7 +9,7 @@ export default async function CreateSession() {
         <>
 
             <Layout breadcrumbTitleParent="Session" breadcrumbTitle="Create Session" user={webUser}>
-                <AddSessionForm />
+                <AddSessionForm user={webUser} />
             </Layout>
         </>
     )

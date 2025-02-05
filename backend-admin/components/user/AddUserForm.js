@@ -41,7 +41,7 @@ const AddUserForm = () => {
                     {
                         role: role,
                     })
-                console.log(result)
+
                 formik.resetForm()
                 showToastMessage()
             } catch (error) {
