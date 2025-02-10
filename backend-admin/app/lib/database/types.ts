@@ -38,8 +38,10 @@ export interface SessionTable {
   startDate: Date,
   endDate: Date,
   sessionDate: Date,
-  days: string[],
+  days_of_week: string[],
   price: number,
+  people: number,
+  active: boolean,
   config: JSON,
   organisation_id: number;
   created_at: Date;

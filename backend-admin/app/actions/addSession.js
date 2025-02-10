@@ -24,6 +24,8 @@ export async function addSession(user, session) {
         end_date: endDate,
         session_date: sessionDate,
         days_of_week: session.days,
+        active: session.active,
+        people: session.people,
         price: session.price,
         config: session.config,
         created_at: '2024-12-06',

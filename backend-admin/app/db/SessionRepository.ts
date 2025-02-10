@@ -21,7 +21,7 @@ export async function getAllSessionsByOrg(
     offset: number
 ): Promise<Session[] | undefined> {
     const eb = expressionBuilder<Database, 'session'>()
-    const user = await db
+    const session = await db
         .selectFrom('session')
         .selectAll()
         .where(({ eb }) =>
@@ -31,5 +31,5 @@ export async function getAllSessionsByOrg(
         .offset(offset)
         .execute()
 
-    return user
+    return session
 }

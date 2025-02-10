@@ -4,7 +4,7 @@ import ChatList from "../chart/ChartList"
 export default function MembersPanel() {
     return (
         <>
-            <div className={`wg-chart-default mb-20`}>
+            <div className={`wg-chart-default`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap14">
                         <div className="image type-white">

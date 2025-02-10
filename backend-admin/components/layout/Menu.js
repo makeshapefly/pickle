@@ -80,7 +80,7 @@ export default function Menu() {
             </div>
             <div className="center-item">
                 <div className="center-item">
-                    <div className="center-heading">Club and Members</div>
+                    <div className="center-heading">Sessions and Members</div>
                     <ul className="menu-list">
                         <li className={`menu-item ${router === '/members' ? 'active' : ''}`}>
                             <Link href="/members" className={isSubMenuItemActive('/members') ? 'active' : ''}>
@@ -96,7 +96,7 @@ export default function Menu() {
                             <ul className="sub-menu" style={{ display: `${activeAccordion === 7 ? "block" : "none"}` }}>
                                 <li className="sub-menu-item">
                                     <Link href="/all-sessions" className={isSubMenuItemActive('/all-sessions') ? 'active' : ''}>
-                                        <div className="text">All sessions</div>
+                                        <div className="text">Club sessions</div>
                                     </Link>
                                 </li>
                                 <li className="sub-menu-item">
@@ -105,6 +105,12 @@ export default function Menu() {
                                     </Link>
                                 </li>
                             </ul>
+                        </li>
+                        <li className={`menu-item ${router === '/' ? 'active' : ''}`}>
+                            <Link href="/" className={isSubMenuItemActive('/') ? 'active' : ''}>
+                                <div className="icon"><i className="icon-list" /></div>
+                                <div className="text">Bookings</div>
+                            </Link>
                         </li>
                         <li className={`menu-item ${router === '/report' ? 'active' : ''}`}>
                             <Link href="/report" className={isSubMenuItemActive('/report') ? 'active' : ''}>
