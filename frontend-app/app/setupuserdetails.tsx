@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, FlatList } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import PageContainer from '../components/PageContainer'
 import { COLORS, SIZES, illustrations } from '../constants'
@@ -7,6 +7,7 @@ import { Image } from 'expo-image'
 import { TextInput } from 'react-native'
 import Button from '../components/Button'
 import { useAuth } from '@clerk/clerk-expo'
+import { router } from 'expo-router';
 
 type User = {
     firstName: string;
@@ -32,7 +33,7 @@ const Setupuserdetails = () => {
 
         const token = await getToken()
         const requestOptions = {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
@@ -46,7 +47,7 @@ const Setupuserdetails = () => {
                 .then(response => {
                     response.json()
                         .then(data => {
-                            alert("Member created");
+                            router.push('/(tabs)')
                         });
                 })
         }

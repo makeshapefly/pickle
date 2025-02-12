@@ -6,30 +6,62 @@ import { COLORS, SIZES } from '../constants'
 import { OtpInput } from "react-native-otp-entry";
 import { useNavigation } from 'expo-router'
 import Button from '../components/Button'
-import { useSignIn } from '@clerk/clerk-expo'
+import { useSignIn, useAuth } from '@clerk/clerk-expo'
 import { router } from 'expo-router';
 
 type Nav = {
     navigate: (value: string) => void;
 }
 
+type User = {
+    firstName: string;
+    lastName: string;
+    mobilePhone: string | string[];
+    email: string;
+};
+
 const VerifySignIn = () => {
     const { navigate } = useNavigation<Nav>();
     const [error, setError] = useState<string | undefined>();
     const [code, setCode] = React.useState('')
     const { isLoaded, signIn, setActive } = useSignIn()
+    const { isSignedIn } = useAuth()
 
-    useEffect(() => {
-        memberDetails()
-        if (error) {
-            Alert.alert('An error occurred', error);
-        }
-    }, [error]);
-
+    const { getToken } = useAuth()
     const memberDetails = async () => {
-        const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'member/')
-        const data = await response.json()
-        //alert(JSON.stringify(data))
+        let user: any = {
+            firstName: '',
+            lastName: '',
+            //mobilePhone: '+44' + phoneNo,
+            mobilePhone: '',
+            email: "",
+        }
+
+        const token = await getToken()
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(user)
+        };
+
+        try {
+            await fetch(
+                process.env.EXPO_PUBLIC_DB_URL + 'member/', requestOptions)
+                .then(response => {
+                    response.json()
+                        .then(data => {
+                            if (data.firstName == '' || data.lastName == '' || data.firstName == null || data.lastName == null) {
+                                router.push('/setupuserdetails')
+                            }
+                        });
+                })
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     async function handleVerification(text: string) {
@@ -49,7 +81,8 @@ const VerifySignIn = () => {
             if (signInAttempt.status === 'complete') {
                 await setActive({ session: signInAttempt.createdSessionId })
                 memberDetails()
-                //router.push('/')
+                console.log("isSignedIn: " + isSignedIn )
+                router.push('/')
             } else {
                 // If the status is not complete, check why. User may need to
                 // complete further steps.
@@ -76,6 +109,7 @@ const VerifySignIn = () => {
                             focusColor={COLORS.primary}
                             focusStickBlinkingDuration={500}
                             onFilled={(text) => handleVerification(text)}
+                            //onFilled={(text) => memberDetails()}
                             theme={{
                                 pinCodeContainerStyle: {
                                     backgroundColor: COLORS.white,
@@ -98,12 +132,6 @@ const VerifySignIn = () => {
                 </ScrollView>
             </PageContainer>
             <View style={styles.footer}>
-                <Button
-                    title="Verify Now"
-                    filled
-                    onPress={() => navigate('accountcreated')}
-                    style={styles.filledBtn}
-                />
             </View>
         </SafeAreaView>
     )

@@ -88,7 +88,7 @@ const TabLayout = () => {
                   fontFamily: "regular",
                   color: focused ? COLORS.primary : "black",
                   marginTop: 4
-                }}>History</Text>
+                }}>Sessions</Text>
               </View>
             )
           },

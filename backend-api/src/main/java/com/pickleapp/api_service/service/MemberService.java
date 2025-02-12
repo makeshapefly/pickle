@@ -27,4 +27,30 @@ public class MemberService {
             return "error";
         }
     }
+
+    public String updateMember(Member member) {
+        Member existingMember = repository.findByMobilePhone(member.getMobilePhone());
+
+        if (existingMember != null) {
+            try {
+                if (!member.getFirstName().equals("")) {
+                    existingMember.setFirstName(member.getFirstName());
+                }
+                if (!member.getLastName().equals("")) {
+                    existingMember.setLastName(member.getLastName());
+                }
+                repository.save(existingMember);
+                return "ok";
+            } catch (Exception ex) {
+                return "error";
+            }
+        } else {
+            try {
+                repository.save(member);
+                return "ok";
+            } catch (Exception ex) {
+                return "error";
+            }
+        }
+    }
 }

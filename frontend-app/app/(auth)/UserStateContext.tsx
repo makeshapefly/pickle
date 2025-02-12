@@ -19,6 +19,8 @@ export const StateProvider = (props) => {
 
     const { getToken } = useAuth()
 
+    //alert("isSignedIn: " + isSignedIn)
+
     const memberDetails = async () => {
         const token = await getToken()
         const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'member/', {
@@ -47,7 +49,6 @@ export const StateProvider = (props) => {
                 mobilePhone: data.mobilePhone,
                 email: data.email
             }
-
             setUserDetails(user)
         }
     }
@@ -65,7 +66,7 @@ export const StateProvider = (props) => {
     }, []);
 
     return (
-        <UserStateContext.Provider value={{user: [userDetails, setUserDetails], http: [httpStatus, setHttpStatus]}}>
+        <UserStateContext.Provider value={{ user: [userDetails, setUserDetails], http: [httpStatus, setHttpStatus] }}>
             {props.children}
         </UserStateContext.Provider>
     )

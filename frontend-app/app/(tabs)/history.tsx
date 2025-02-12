@@ -107,7 +107,7 @@ const HistoryScreen = () => {
   return (
     <SafeAreaView style={styles.area}>
       <View style={styles.container}>
-        <Header title="History" />
+        <Header title="Sessions" />
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}

@@ -47,4 +47,16 @@ public class MemberController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    @PutMapping("/")
+    public ResponseEntity<Member> updateMember(@RequestBody Member updateMember, @AuthenticationPrincipal Jwt principal) {
+        updateMember.setMobilePhone(principal.getClaim("phone_number"));
+        updateMember.setFirstName(updateMember.getFirstName());
+        updateMember.setLastName(updateMember.getLastName());
+        String response = service.updateMember(updateMember);
+        if (response.equals("ok")) {
+            return ResponseEntity.ok(updateMember);
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }

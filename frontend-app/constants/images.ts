@@ -26,6 +26,7 @@ const gameIcon = require("../assets/images/gameIcon.png") as string;
 const success = require("../assets/images/success.png") as string;
 const checked = require("../assets/images/checked.png") as string;
 const error = require("../assets/images/error.png") as string;
+const logo = require("../assets/images/pickleball.png") as string;
 
 const images = {
     avatar1,
@@ -51,7 +52,8 @@ const images = {
     gameIcon,
     success,
     checked,
-    error
+    error,
+    logo
 }
 
 export default images;

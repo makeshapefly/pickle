@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from 'react-native'
-import React, {useContext} from 'react'
+import React, { useContext } from 'react'
 import { COLORS, images } from '../../constants'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
@@ -23,8 +23,10 @@ const HomeScreen = () => {
   const { navigate } = useNavigation<Nav>();
   const { signOut } = useClerk()
 
-  const { user, http } = useContext(UserStateContext)
-      const [userDetails, setUserDetails] = user
+  const { user } = useContext(UserStateContext)
+  const [userDetails, setUserDetails] = user
+
+  //alert(JSON.stringify(userDetails))
 
   const handleSignOut = async () => {
     try {
@@ -43,8 +45,8 @@ const HomeScreen = () => {
     return (
       <View style={styles.balanceCard}>
         <View style={styles.balanceCardView}>
-          <Text style={styles.balanceText}>My Balance</Text>
-          <Text style={styles.balanceValue}>$2887.65</Text>
+          <Text style={styles.balanceText}> Welcome {userDetails.firstName}</Text>
+          <Text style={styles.balanceValue}><Button title="Sign out" onPress={handleSignOut} /></Text>
         </View>
         <View style={styles.featureColumn}>
           <TouchableOpacity
@@ -126,15 +128,17 @@ const HomeScreen = () => {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View>
-            <Text style={styles.greeting}>Welcome back</Text>
-            <Text style={styles.username}>{userDetails.firstName}</Text>
-            <Button title="Sign out" onPress={handleSignOut} />
+            <Image
+              source={images.logo}
+              contentFit='contain'
+              style={styles.featureIcon}
+            />
+            <Text style={styles.logoText}>Pickler</Text>
           </View>
           <TouchableOpacity
             onPress={() => navigate("notifications")}
           >
-            <View style={styles.notiView} />
-            <Octicons name="bell" size={24} color={COLORS.white} />
+            <Octicons name="three-bars" size={24} color={COLORS.white} />
           </TouchableOpacity>
         </View>
         {renderBalanceCard()}
@@ -253,13 +257,16 @@ const styles = StyleSheet.create({
     marginBottom: 12
   },
   featureIcon: {
-    height: 32,
-    width: 32
+    height: 48,
+    width: 48
   },
   featureText: {
     fontSize: 14,
     fontFamily: "regular",
     color: COLORS.primary,
+  },
+  logoText: {
+    color: "#FFFFFF"
   }
 })
 export default HomeScreen
