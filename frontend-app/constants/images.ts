@@ -26,7 +26,9 @@ const gameIcon = require("../assets/images/gameIcon.png") as string;
 const success = require("../assets/images/success.png") as string;
 const checked = require("../assets/images/checked.png") as string;
 const error = require("../assets/images/error.png") as string;
-const logo = require("../assets/images/pickleball.png") as string;
+const logo = require("../assets/images/smash.png") as string;
+const clubs = require("../assets/images/clubs.png") as string;
+const clubLogo = require("../assets/images/serve.png") as string;
 
 const images = {
     avatar1,
@@ -53,7 +55,9 @@ const images = {
     success,
     checked,
     error,
-    logo
+    logo,
+    clubs,
+    clubLogo
 }
 
 export default images;

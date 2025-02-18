@@ -1,11 +1,9 @@
 package com.pickleapp.api_service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -21,6 +19,13 @@ public class Member {
     private String mobilePhone;
 
     private String email;
+
+    @ManyToMany
+    @JoinTable(
+            name = "organisation_member",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "organisation_id"))
+    Set<Organisation> organisations;
 
     private Date createdAt;
 
@@ -70,5 +75,13 @@ public class Member {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Organisation> getOrganisations() {
+        return organisations;
+    }
+
+    public void setOrganisations(Set<Organisation> organisations) {
+        this.organisations = organisations;
     }
 }

@@ -16,6 +16,7 @@ export const COLORS = {
     secondaryGray: '#808080',
     red: "#FF0000",
     green: "#00BE00",
+    header: "#F7F5F2",
     tansparentPrimary: "rgba(0, 154, 118, .15)"
 };
 

@@ -3,6 +3,7 @@ package com.pickleapp.api_service.service;
 import com.pickleapp.api_service.entity.Member;
 import com.pickleapp.api_service.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -28,7 +29,7 @@ public class MemberService {
         }
     }
 
-    public String updateMember(Member member) {
+    public ResponseEntity<Member> updateMember(Member member) {
         Member existingMember = repository.findByMobilePhone(member.getMobilePhone());
 
         if (existingMember != null) {
@@ -40,16 +41,16 @@ public class MemberService {
                     existingMember.setLastName(member.getLastName());
                 }
                 repository.save(existingMember);
-                return "ok";
+                return ResponseEntity.ok(existingMember);
             } catch (Exception ex) {
-                return "error";
+                return ResponseEntity.badRequest().build();
             }
         } else {
             try {
                 repository.save(member);
-                return "ok";
+                return ResponseEntity.ok(member);
             } catch (Exception ex) {
-                return "error";
+                return ResponseEntity.badRequest().build();
             }
         }
     }

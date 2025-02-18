@@ -1,10 +1,8 @@
 package com.pickleapp.api_service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.Date;
 
@@ -23,7 +21,8 @@ public class Session {
 
     private Date endDate;
 
-    private int[] days;
+    @Column(name = "days_of_week")
+    private String[] days;
 
     private float price;
 
@@ -31,6 +30,7 @@ public class Session {
 
     private String config;
 
+    @Column(name = "organisation_id")
     private long organisationId;
 
     public UUID getId() {
@@ -73,11 +73,11 @@ public class Session {
         this.endDate = endDate;
     }
 
-    public int[] getDays() {
+    public String[] getDays() {
         return days;
     }
 
-    public void setDays(int[] days) {
+    public void setDays(String[] days) {
         this.days = days;
     }
 

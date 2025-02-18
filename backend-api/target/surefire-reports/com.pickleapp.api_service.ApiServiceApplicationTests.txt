@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.pickleapp.api_service.ApiServiceApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.895 s -- in com.pickleapp.api_service.ApiServiceApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.017 s -- in com.pickleapp.api_service.ApiServiceApplicationTests

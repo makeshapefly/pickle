@@ -1,41 +1,142 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from 'react-native'
-import React, { useContext } from 'react'
-import { COLORS, images } from '../../constants'
+import React, { useContext, useEffect } from 'react'
+import { COLORS, images, icons, SIZES } from '../../constants'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
 import { Octicons } from '@expo/vector-icons'
-import { useNavigation } from 'expo-router'
+import { Redirect, useNavigation } from 'expo-router'
 import SubHeaderItem from '../../components/SubHeaderItem'
-import Card from '../../components/Card'
+import Card from '../../components/ClubCard'
 import { userCards } from '../../data'
 import SavingCard from '../../components/SavingCard'
 import { ScrollView } from 'react-native-virtualized-view'
-import { useClerk } from '@clerk/clerk-react'
+import { useClerk, useAuth } from '@clerk/clerk-react'
 import * as Linking from 'expo-linking'
-import { UserStateContext } from "../(auth)/UserStateContext"
+import ClubCard from '../../components/ClubCard'
+import { SimpleLineIcons } from '@expo/vector-icons'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 type Nav = {
   navigate: (value: string) => void
 }
 
+type User = {
+  isSignedIn: boolean;
+  id: string;
+  firstName: string;
+  lastName: string;
+  mobilePhone: string;
+  email: string;
+  organisations: [];
+  noOrganisations: number;
+};
+
 const HomeScreen = () => {
+  const [userDetails, setUserDetails] = React.useState({})
   const { navigate } = useNavigation<Nav>();
   const { signOut } = useClerk()
+  const { getToken } = useAuth()
 
-  const { user } = useContext(UserStateContext)
-  const [userDetails, setUserDetails] = user
+  useEffect(() => {
+    memberDetails()
+  }, []);
 
-  //alert(JSON.stringify(userDetails))
+  const memberDetails = async () => {
+    const token = await getToken()
+    const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'member/', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (response.status == 404) {
+
+    }
+
+    if (response.status == 401) {
+
+    }
+
+    if (response.status == 200) {
+      const data = await response.json()
+      let noOfOrgs = data.organisations ? data.organisations.length : 0;
+
+      let user: User = {
+        isSignedIn: true,
+        id: data.id,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        mobilePhone: data.mobilePhone,
+        email: data.email,
+        organisations: data.organisations,
+        noOrganisations: noOfOrgs
+      }
+      setUserDetails(user)
+
+      //if (user.firstName == '' || user.firstName == null) {
+      //router.replace('/setupuserdetails')
+      //}
+    }
+  }
+
+  const sessionDetails = () => {
+    /*const startDate = session.start_date
+    const endDate = session.end_date
+    const startHours = startDate.getHours()
+    const endHours = endDate.getHours()
+    const startMinutes = startDate.getMinutes()
+    const endMinutes = endDate.getMinutes()
+    const daysMapper = new Map([['sunday', 0], ['monday', 1], ['tuesday', 2], ['wednesday', 3], ['thursday', 4], ['friday', 5], ['saturday', 6]])
+    let days = []
+    session.days_of_week.forEach(element => days.push(daysMapper.get(element)));
+
+    //work out how far ahead to populate sessions
+    let today = new Date()
+    today.setHours(0)
+    today.setMinutes(0)
+
+    let sixMonthsAhead = new Date()
+    sixMonthsAhead.setMonth(today.getMonth() + 6)
+    let populateToDate = endDate < sixMonthsAhead ? endDate : sixMonthsAhead
+
+    let events = [];
+    while (today < populateToDate) {
+      //check that today's date is after session start date           
+      let calEvent = null
+      if (days.includes(today.getDay())) {
+        let eventStart = new Date()
+        eventStart.setTime(today)
+        eventStart.setHours(startHours)
+        eventStart.setMinutes(startMinutes)
+        //console.log("eventStart: " + eventStart.toString())
+
+        let eventEnd = new Date()
+        eventEnd.setTime(today)
+        eventEnd.setHours(endHours)
+        eventEnd.setMinutes(endMinutes)
+        //console.log("eventEnd: " + eventEnd.toString())
+
+        calEvent = {
+          id: session.id,
+          title: session.name,
+          start: eventStart,
+          end: eventEnd
+        }
+        events.push(calEvent)
+      }
+
+      today.setHours(today.getHours() + 24)
+    }
+    setEventsList(events)*/
+  }
 
   const handleSignOut = async () => {
     try {
       await signOut()
-      // Redirect to your desired page
       Linking.openURL(Linking.createURL('/'))
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
       console.error(JSON.stringify(err, null, 2))
     }
   }
@@ -45,58 +146,24 @@ const HomeScreen = () => {
     return (
       <View style={styles.balanceCard}>
         <View style={styles.balanceCardView}>
-          <Text style={styles.balanceText}> Welcome {userDetails.firstName}</Text>
-          <Text style={styles.balanceValue}><Button title="Sign out" onPress={handleSignOut} /></Text>
+          <Text style={styles.balanceText}>Next Session</Text>
+          <Text style={styles.balanceValue}>15th March 2025</Text>
         </View>
         <View style={styles.featureColumn}>
-          <TouchableOpacity
-            onPress={() => navigate("send")}
-            style={styles.featureContainer}>
-            <View style={styles.featureIconContainer}>
+          <View style={styles.profileLeftContainer}>
+            <View>
               <Image
-                source={images.sendIcon}
+                source={images.clubLogo}
                 contentFit='contain'
-                style={styles.featureIcon}
+                style={styles.icon}
               />
+              <TouchableOpacity>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.featureText}>Send</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigate("requestmoney")}
-            style={styles.featureContainer}>
-            <View style={styles.featureIconContainer}>
-              <Image
-                source={images.requestIcon}
-                contentFit='contain'
-                style={styles.featureIcon}
-              />
+            <View style={{ marginLeft: 16, marginTop: 5 }}>
+              <Text style={styles.name}>Purple Pickleball</Text>
             </View>
-            <Text style={styles.featureText}>Request</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigate("pay")}
-            style={styles.featureContainer}>
-            <View style={styles.featureIconContainer}>
-              <Image
-                source={images.payIcon}
-                contentFit='contain'
-                style={styles.featureIcon}
-              />
-            </View>
-            <Text style={styles.featureText}>Pay</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigate("topup")}
-            style={styles.featureContainer}>
-            <View style={styles.featureIconContainer}>
-              <Image
-                source={images.topupIcon}
-                contentFit='contain'
-                style={styles.featureIcon}
-              />
-            </View>
-            <Text style={styles.featureText}>Top Up</Text>
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
     )
@@ -108,13 +175,28 @@ const HomeScreen = () => {
       <View style={{ paddingHorizontal: 16 }}>
         <FlatList
           horizontal
-          data={userCards}
+          data={userDetails.organisations}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <Card
-              number={item.number}
-              balance={item.balance}
-              date={item.date}
+            <ClubCard
+              name={item.orgName}
+              onPress={() => console.log("Card Pressed")}
+            />
+          )} />
+      </View>
+    )
+  }
+
+  const renderAllSessions = () => {
+    return (
+      <View style={{ paddingHorizontal: 16 }}>
+        <FlatList
+          horizontal
+          data={userDetails.organisations}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <ClubCard
+              name={item.orgName}
               onPress={() => console.log("Card Pressed")}
             />
           )} />
@@ -126,41 +208,36 @@ const HomeScreen = () => {
     <SafeAreaView style={styles.area}>
       <StatusBar style="light" />
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <View>
-            <Image
-              source={images.logo}
-              contentFit='contain'
-              style={styles.featureIcon}
-            />
-            <Text style={styles.logoText}>Pickler</Text>
+        <View style={styles.profileContainer}>
+          <View style={styles.profileLeftContainer}>
+            <View>
+              <FontAwesome5 name="user-circle" size={28} color="black" />
+            </View>
+            <View style={{ marginLeft: 16 }}>
+              <Text style={styles.name}>Welcome</Text>
+              <Text style={styles.name}>{userDetails.firstName}</Text>
+            </View>
           </View>
-          <TouchableOpacity
-            onPress={() => navigate("notifications")}
-          >
-            <Octicons name="three-bars" size={24} color={COLORS.white} />
-          </TouchableOpacity>
+          <View style={styles.profileRightContainer}>
+            <MaterialCommunityIcons name="message-text-outline" size={28} color="black" />
+          </View>
         </View>
+
         {renderBalanceCard()}
         <ScrollView style={{ top: -40 }}>
           <SubHeaderItem
-            title="Your Cards"
+            title="Upcoming Sessions"
+            subtitle="View All"
+            onPress={() => navigate("yourcard")}
+          />
+          {renderAllSessions()}
+
+          <SubHeaderItem
+            title="Your Clubs"
             subtitle="View All"
             onPress={() => navigate("yourcard")}
           />
           {renderAllDebitCard()}
-          <SubHeaderItem
-            title="Your Savings"
-            subtitle="View All"
-            onPress={() => navigate("yoursavings")}
-          />
-          <SavingCard
-            title="Buy Playstation"
-            subtitle="Slim 1 TB 56 Games"
-            icon={images.gameIcon}
-            percentage={60}
-            onPress={() => console.log("View Detail")}
-          />
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -170,22 +247,19 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.header,
     margin: 0,
     height: "100%"
   },
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.header,
   },
   headerContainer: {
-    backgroundColor: COLORS.primary,
-    height: 126,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    backgroundColor: COLORS.header,
     alignItems: "center",
-    paddingHorizontal: 16,
-    marginBottom: 20,
+    height: 72,
+    paddingVertical: 16
   },
   greeting: {
     fontSize: 14,
@@ -209,7 +283,7 @@ const styles = StyleSheet.create({
     zIndex: 999
   },
   balanceCard: {
-    height: 172,
+    height: 140,
     borderColor: "#F2F2F2",
     borderWidth: 1,
     borderRadius: 8,
@@ -240,7 +314,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: 20
   },
   featureContainer: {
     flexDirection: "column",
@@ -252,13 +327,17 @@ const styles = StyleSheet.create({
     width: 46,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 23,
-    backgroundColor: "#ECE7FF",
+    //borderRadius: 23,
+    //backgroundColor: "#ECE7FF",
     marginBottom: 12
   },
   featureIcon: {
     height: 48,
     width: 48
+  },
+  logo: {
+    height: 68,
+    width: 68
   },
   featureText: {
     fontSize: 14,
@@ -266,7 +345,86 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   logoText: {
-    color: "#FFFFFF"
-  }
+    color: "#000000",
+    fontSize: 20,
+  },
+  qrContainer: {
+    flexDirection: "row",
+    marginHorizontal: 16,
+    justifyContent: "space-between"
+  },
+  qrInfoContainer: {
+    width: (SIZES.width - 32) / 2 - 12,
+    height: 72,
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: COLORS.white,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row"
+  },
+  qrIconContainer: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: "#F1EDFF",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 16
+  },
+  qrIcon: {
+    height: 24,
+    width: 24,
+    tintColor: COLORS.primary
+  },
+  qrText: {
+    fontSize: 14,
+    fontFamily: "medium",
+    color: COLORS.primary
+  },
+  profileContainer: {
+    height: 120,
+    width: SIZES.width - 32,
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: COLORS.header,
+    marginHorizontal: 16,
+    marginVertical: 6,
+    top: -22,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  profileLeftContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+
+  },
+  profileRightContainer: {
+    height: 26,
+    paddingHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatar: {
+    height: 48,
+    width: 48,
+    borderRadius: 24,
+  },
+  iconContainer: {
+    height: 16,
+    width: 16,
+    borderRadius: 8,
+    backgroundColor: COLORS.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 0,
+    right: 0
+  },
+  icon: {
+    width: 40,
+    height: 40
+  },
 })
 export default HomeScreen

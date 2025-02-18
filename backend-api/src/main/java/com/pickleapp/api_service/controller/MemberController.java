@@ -1,6 +1,7 @@
 package com.pickleapp.api_service.controller;
 import com.pickleapp.api_service.entity.Member;
 import com.pickleapp.api_service.service.MemberService;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -53,10 +54,6 @@ public class MemberController {
         updateMember.setMobilePhone(principal.getClaim("phone_number"));
         updateMember.setFirstName(updateMember.getFirstName());
         updateMember.setLastName(updateMember.getLastName());
-        String response = service.updateMember(updateMember);
-        if (response.equals("ok")) {
-            return ResponseEntity.ok(updateMember);
-        }
-        return ResponseEntity.badRequest().build();
+        return service.updateMember(updateMember);
     }
 }

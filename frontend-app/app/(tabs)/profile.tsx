@@ -9,6 +9,8 @@ import ProfileItem from '../../components/ProfileItem'
 import { ScrollView } from 'react-native-virtualized-view'
 import Button from '../../components/Button'
 import { launchImagePicker } from '../../utils/ImagePickerHelper'
+import { useClerk } from '@clerk/clerk-react'
+import * as Linking from 'expo-linking'
 
 type Nav = {
   navigate: (value: string) => void
@@ -18,6 +20,7 @@ const ProfileScreen = () => {
   const { navigate } = useNavigation<Nav>();
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState<any>(null);
+  const { signOut } = useClerk()
 
   const pickImage = async () => {
     try {
@@ -29,6 +32,15 @@ const ProfileScreen = () => {
       setImage({ uri: tempUri })
     } catch (error) { }
   }
+
+  const handleSignOut = async () => {
+      try {
+        await signOut()
+        Linking.openURL(Linking.createURL('/'))
+      } catch (err) {
+        console.error(JSON.stringify(err, null, 2))
+      }
+    }
 
   const renderModal = () => {
     return (
@@ -95,32 +107,6 @@ const ProfileScreen = () => {
               <Text>Basic</Text>
             </View>
           </View>
-          <View style={styles.qrContainer}>
-            <TouchableOpacity
-              onPress={() => navigate("pay")}
-              style={styles.qrInfoContainer}>
-              <View style={styles.qrIconContainer}>
-                <Image
-                  source={icons.scanner}
-                  contentFit='contain'
-                  style={styles.qrIcon}
-                />
-              </View>
-              <Text style={styles.qrText}>Scan QR</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigate("pay")}
-              style={styles.qrInfoContainer}>
-              <View style={styles.qrIconContainer}>
-                <Image
-                  source={icons.qrCode}
-                  contentFit='contain'
-                  style={styles.qrIcon}
-                />
-              </View>
-              <Text style={styles.qrText}>My QR</Text>
-            </TouchableOpacity>
-          </View>
           <View style={styles.settingsContainer}>
             <Text style={styles.subtitle}>Account</Text>
             <ProfileItem
@@ -133,17 +119,7 @@ const ProfileScreen = () => {
               icon={icons.email}
               onPress={() => navigate("changeemail")}
             />
-            <ProfileItem
-              title="Change Password"
-              icon={icons.lock}
-              onPress={() => navigate("changepassword")}
-            />
             <Text style={styles.subtitle}>More Settings</Text>
-            <ProfileItem
-              title="Account Security"
-              icon={icons.padlock}
-              onPress={() => navigate("account")}
-            />
             <ProfileItem
               title="Help and Privacy"
               icon={icons.question}
@@ -153,7 +129,7 @@ const ProfileScreen = () => {
             <TouchableOpacity
               onPress={() => setModalVisible(true)}
               style={styles.btn}>
-              <Text style={styles.logout}>Log out</Text>
+              <Button title="Sign out" onPress={handleSignOut} /> 
             </TouchableOpacity>
           </View>
         </ScrollView>

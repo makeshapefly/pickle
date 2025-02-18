@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { COLORS, SIZES, icons } from '../../constants'
 import { FlatList } from 'react-native'
 import { userCards } from '../../data'
-import Card from '../../components/Card'
+import Card from '../../components/ClubCard'
 import { Image } from 'expo-image'
 import { LineChart } from 'react-native-chart-kit'
 

@@ -5,7 +5,6 @@ import PageContainer from '../components/PageContainer'
 import { COLORS, SIZES } from '../constants'
 import { OtpInput } from "react-native-otp-entry";
 import { useNavigation } from 'expo-router'
-import Button from '../components/Button'
 import { useSignIn, useAuth } from '@clerk/clerk-expo'
 import { router } from 'expo-router';
 
@@ -53,6 +52,7 @@ const VerifySignIn = () => {
                 .then(response => {
                     response.json()
                         .then(data => {
+                            console.log("here: " + JSON.stringify(data))
                             if (data.firstName == '' || data.lastName == '' || data.firstName == null || data.lastName == null) {
                                 router.push('/setupuserdetails')
                             }
@@ -82,7 +82,7 @@ const VerifySignIn = () => {
                 await setActive({ session: signInAttempt.createdSessionId })
                 memberDetails()
                 console.log("isSignedIn: " + isSignedIn )
-                router.push('/')
+                router.push('/(tabs)')
             } else {
                 // If the status is not complete, check why. User may need to
                 // complete further steps.

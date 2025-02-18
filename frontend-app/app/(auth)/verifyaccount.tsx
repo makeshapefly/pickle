@@ -6,7 +6,7 @@ import { COLORS, SIZES } from '../../constants'
 import { OtpInput } from "react-native-otp-entry";
 import { useNavigation } from 'expo-router'
 import Button from '../../components/Button'
-import { useSignUp } from '@clerk/clerk-expo'
+import { useSignUp, useAuth } from '@clerk/clerk-expo'
 import { router } from 'expo-router';
 
 type Nav = {
@@ -18,12 +18,49 @@ const VerifyAccount = () => {
   const [error, setError] = useState<string | undefined>();
   const [code, setCode] = React.useState('')
   const { isLoaded, signUp, setActive } = useSignUp()
+  const { getToken } = useAuth()
 
   useEffect(() => {
     if (error) {
       Alert.alert('An error occurred', error);
     }
   }, [error]);
+
+  const memberDetails = async () => {
+    let user: any = {
+        firstName: '',
+        lastName: '',
+        //mobilePhone: '+44' + phoneNo,
+        mobilePhone: '',
+        email: "",
+    }
+
+    const token = await getToken()
+    const requestOptions = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(user)
+    };
+
+    try {
+        await fetch(
+            process.env.EXPO_PUBLIC_DB_URL + 'member/', requestOptions)
+            .then(response => {
+                response.json()
+                    .then(data => {
+                        if (data.firstName == '' || data.lastName == '' || data.firstName == null || data.lastName == null) {
+                            router.push('/setupuserdetails')
+                        }
+                    });
+            })
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
 
    const onVerifyPress = async (text: string) => {
       if (!isLoaded) return
@@ -38,15 +75,18 @@ const VerifyAccount = () => {
         // and redirect the user
         if (signUpAttempt.status === 'complete') {
           await setActive({ session: signUpAttempt.createdSessionId })
-          router.replace('/')
+          memberDetails()
+          router.replace('/(tabs)')
         } else {
           // If the status is not complete, check why. User may need to
           // complete further steps.
+          console.error("tony 1")
           console.error(JSON.stringify(signUpAttempt, null, 2))
         }
       } catch (err) {
         // See https://clerk.com/docs/custom-flows/error-handling
         // for more info on error handling
+        console.error("tony 2")
         console.error(JSON.stringify(err, null, 2))
       }
     }

@@ -1,10 +1,12 @@
 com/pickleapp/api_service/service/SessionService.class
-com/pickleapp/api_service/SecurityConfig.class
 com/pickleapp/api_service/entity/Member.class
+com/pickleapp/api_service/controller/SessionController.class
+com/pickleapp/api_service/dto/AvailableSession.class
+com/pickleapp/api_service/service/MemberService.class
+com/pickleapp/api_service/entity/Session.class
+com/pickleapp/api_service/entity/Organisation.class
+com/pickleapp/api_service/SecurityConfig.class
 com/pickleapp/api_service/controller/MemberController.class
 com/pickleapp/api_service/ApiServiceApplication.class
 com/pickleapp/api_service/repository/MemberRepository.class
 com/pickleapp/api_service/repository/SessionRepository.class
-com/pickleapp/api_service/controller/SessionController.class
-com/pickleapp/api_service/service/MemberService.class
-com/pickleapp/api_service/entity/Session.class

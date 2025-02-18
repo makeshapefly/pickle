@@ -75,3 +75,12 @@ CREATE TABLE session (
       FOREIGN KEY(organisation_id)
         REFERENCES organisation(id)
 );
+
+CREATE TABLE booking (
+  id uuid DEFAULT gen_random_uuid(),
+  session_id uuid,
+  session_date Date,
+  member_id uuid,
+  created_at DATE,
+  PRIMARY KEY (id)
+);

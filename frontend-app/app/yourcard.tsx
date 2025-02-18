@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../components/Header'
 import { Image } from 'expo-image'
 import { userCards } from '../data'
-import Card from '../components/Card'
+import Card from '../components/ClubCard'
 import { ScrollView } from "react-native-virtualized-view"
 import { useNavigation } from 'expo-router'
 

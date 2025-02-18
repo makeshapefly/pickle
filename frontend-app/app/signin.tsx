@@ -59,7 +59,7 @@ const Signin = () => {
     } catch (err) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      console.error('Error:', JSON.stringify(err, null, 2))
+      //console.error('Error:', JSON.stringify(err, null, 2))
       if (isClerkAPIResponseError(err)) {
         let errorArray: ClerkAPIError[] = err.errors
         errorArray.forEach(ele => {
@@ -95,35 +95,6 @@ const Signin = () => {
     }
   }
 
-async function handleVerification(e: React.FormEvent) {
-  e.preventDefault()
-
-  if (!isLoaded && !signIn) return null
-
-  try {
-    // Use the code provided by the user and attempt verification
-    const signInAttempt = await signIn.attemptFirstFactor({
-      strategy: 'phone_code',
-      code,
-    })
-
-    // If verification was completed, set the session to active
-    // and redirect the user
-    if (signInAttempt.status === 'complete') {
-      await setActive({ session: signInAttempt.createdSessionId })
-
-      router.push('/')
-    } else {
-      // If the status is not complete, check why. User may need to
-      // complete further steps.
-      console.error(signInAttempt)
-    }
-  } catch (err) {
-    // See https://clerk.com/docs/custom-flows/error-handling
-    // for more info on error handling
-    console.error('Error:', JSON.stringify(err, null, 2))
-  }
-}
 
 if (verifyingSignIn) {
   router.replace('/verifysignin')
