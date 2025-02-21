@@ -16,6 +16,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/session")
+@CrossOrigin
 public class SessionController {
 
     @Autowired

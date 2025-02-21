@@ -81,57 +81,6 @@ const HomeScreen = () => {
     }
   }
 
-  const sessionDetails = () => {
-    /*const startDate = session.start_date
-    const endDate = session.end_date
-    const startHours = startDate.getHours()
-    const endHours = endDate.getHours()
-    const startMinutes = startDate.getMinutes()
-    const endMinutes = endDate.getMinutes()
-    const daysMapper = new Map([['sunday', 0], ['monday', 1], ['tuesday', 2], ['wednesday', 3], ['thursday', 4], ['friday', 5], ['saturday', 6]])
-    let days = []
-    session.days_of_week.forEach(element => days.push(daysMapper.get(element)));
-
-    //work out how far ahead to populate sessions
-    let today = new Date()
-    today.setHours(0)
-    today.setMinutes(0)
-
-    let sixMonthsAhead = new Date()
-    sixMonthsAhead.setMonth(today.getMonth() + 6)
-    let populateToDate = endDate < sixMonthsAhead ? endDate : sixMonthsAhead
-
-    let events = [];
-    while (today < populateToDate) {
-      //check that today's date is after session start date           
-      let calEvent = null
-      if (days.includes(today.getDay())) {
-        let eventStart = new Date()
-        eventStart.setTime(today)
-        eventStart.setHours(startHours)
-        eventStart.setMinutes(startMinutes)
-        //console.log("eventStart: " + eventStart.toString())
-
-        let eventEnd = new Date()
-        eventEnd.setTime(today)
-        eventEnd.setHours(endHours)
-        eventEnd.setMinutes(endMinutes)
-        //console.log("eventEnd: " + eventEnd.toString())
-
-        calEvent = {
-          id: session.id,
-          title: session.name,
-          start: eventStart,
-          end: eventEnd
-        }
-        events.push(calEvent)
-      }
-
-      today.setHours(today.getHours() + 24)
-    }
-    setEventsList(events)*/
-  }
-
   const handleSignOut = async () => {
     try {
       await signOut()
@@ -211,7 +160,7 @@ const HomeScreen = () => {
         <View style={styles.profileContainer}>
           <View style={styles.profileLeftContainer}>
             <View>
-              <FontAwesome5 name="user-circle" size={28} color="black" />
+              <FontAwesome5 name="user-circle" size={32} color="black" />
             </View>
             <View style={{ marginLeft: 16 }}>
               <Text style={styles.name}>Welcome</Text>
@@ -219,7 +168,11 @@ const HomeScreen = () => {
             </View>
           </View>
           <View style={styles.profileRightContainer}>
-            <MaterialCommunityIcons name="message-text-outline" size={28} color="black" />
+            <Image
+              source={icons.email}
+              contentFit='contain'
+              style={styles.icon}
+            />
           </View>
         </View>
 
@@ -423,8 +376,8 @@ const styles = StyleSheet.create({
     right: 0
   },
   icon: {
-    width: 40,
-    height: 40
+    width: 28,
+    height: 28
   },
 })
 export default HomeScreen

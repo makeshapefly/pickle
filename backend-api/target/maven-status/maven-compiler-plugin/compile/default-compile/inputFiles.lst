@@ -1,12 +1,16 @@
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/ApiServiceApplication.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/SecurityConfig.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/controller/BookingController.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/controller/MemberController.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/controller/SessionController.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/dto/AvailableSession.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Booking.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Member.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Organisation.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Session.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/repository/BookingRepository.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/repository/MemberRepository.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/repository/SessionRepository.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/service/BookingService.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/service/MemberService.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/service/SessionService.java

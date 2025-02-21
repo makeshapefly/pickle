@@ -22,7 +22,7 @@ const TabLayout = () => {
           right: 0,
           left: 0,
           elevation: 0,
-          height: 72,
+          height: 82,
           backgroundColor: COLORS.white,
           marginBottom:
             Platform.OS === 'ios' &&
@@ -42,7 +42,8 @@ const TabLayout = () => {
             return (
               <View style={{
                 alignItems: "center",
-                paddingTop: 16
+                paddingTop: 36,
+                width: 72
               }}>
                 <Image
                   source={focused ? icons.home : icons.homeOutline}
@@ -65,17 +66,18 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="history"
+        name="sessions"
         options={{
           title: "",
           tabBarIcon: ({ focused }: { focused: boolean }) => {
             return (
               <View style={{
                 alignItems: "center",
-                paddingTop: 16
+                paddingTop: 36,
+                width: 72
               }}>
                 <Image
-                  source={focused ? icons.historyIcon : icons.historyIcon}
+                  source={focused ? icons.calendar : icons.calendar}
                   contentFit="contain"
                   style={{
                     width: 24,
@@ -87,7 +89,8 @@ const TabLayout = () => {
                   fontSize: 12,
                   fontFamily: "regular",
                   color: focused ? COLORS.primary : "black",
-                  marginTop: 4
+                  marginTop: 4,
+                  minWidth: '25%'
                 }}>Sessions</Text>
               </View>
             )
@@ -102,7 +105,8 @@ const TabLayout = () => {
             return (
               <View style={{
                 alignItems: "center",
-                paddingTop: 16
+                paddingTop: 36,
+                width: 72
               }}>
                 <Image
                   source={focused ? icons.pulse : icons.pulse}
@@ -132,7 +136,8 @@ const TabLayout = () => {
             return (
               <View style={{
                 alignItems: "center",
-                paddingTop: 16
+                paddingTop: 36,
+                width: 72
               }}>
                 <Image
                   source={focused ? icons.user : icons.userOutline}

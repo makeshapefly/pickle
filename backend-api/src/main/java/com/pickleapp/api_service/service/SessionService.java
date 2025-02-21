@@ -1,5 +1,7 @@
 package com.pickleapp.api_service.service;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.pickleapp.api_service.dto.AvailableSession;
 import com.pickleapp.api_service.entity.Session;
 import com.pickleapp.api_service.repository.SessionRepository;
@@ -38,15 +40,6 @@ public class SessionService {
     }
 
     public List<AvailableSession> getAvailableSessions(Map<String, List<Session>> sessionsByOrg) {
-        /*Map<String, Integer> daysMapper = new HashMap<String, Integer>();
-        daysMapper.put("sunday", 7);
-        daysMapper.put("monday", 1);
-        daysMapper.put("tuesday", 2);
-        daysMapper.put("wednesday", 3);
-        daysMapper.put("thursday", 4);
-        daysMapper.put("friday", 5);
-        daysMapper.put("saturday", 6);*/
-
         Map<Integer, String> daysMapper = new HashMap<Integer, String>();
         daysMapper.put(7,"SUNDAY");
         daysMapper.put(1, "monday".toUpperCase());
@@ -96,10 +89,27 @@ public class SessionService {
                         System.out.println("availableSession: " + availableSession);
                         availableSession.setId(session.getId());
                         availableSession.setName(session.getName());
+                        availableSession.setLocation(session.getLocation());
 
                         //set time of session
                         LocalDateTime sessionStartDateAndTime = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), startHr, startMin);
                         LocalDateTime sessionEndDateAndTime = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), endHr, endMin);
+
+                        //get config
+                        String config = session.getConfig();
+                        JsonParser parser = new JsonParser();
+                        JsonObject JSONObject = parser.parse(config).getAsJsonObject();
+                        Integer window = JSONObject.get("window").getAsInt();
+
+                        availableSession.setPeople(session.getPeople());
+                        //work out if bookable
+                        LocalDateTime windowDate = sessionStartDateAndTime.minusDays(window);
+                        System.out.println("windowDate: " + windowDate);
+                        System.out.println("today: " + today);
+                        if (LocalDateTime.now().isAfter(windowDate)) {
+                            availableSession.setBookableNow(true);
+                        }
+
 
                         availableSession.setStartDate(sessionStartDateAndTime);
                         availableSession.setEndDate(sessionEndDateAndTime);

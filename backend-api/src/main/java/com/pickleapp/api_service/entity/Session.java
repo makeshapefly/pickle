@@ -15,6 +15,8 @@ public class Session {
 
     private String name;
 
+    private String location;
+
     private boolean recurring;
 
     private Date startDate;
@@ -23,6 +25,8 @@ public class Session {
 
     @Column(name = "days_of_week")
     private String[] days;
+
+    private int people;
 
     private float price;
 
@@ -47,6 +51,14 @@ public class Session {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public boolean isRecurring() {
@@ -87,6 +99,14 @@ public class Session {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getPeople() {
+        return people;
+    }
+
+    public void setPeople(int people) {
+        this.people = people;
     }
 
     public Date getCreatedAt() {

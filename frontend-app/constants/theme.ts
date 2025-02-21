@@ -6,6 +6,8 @@ export const COLORS = {
     primary: '#100D40',
     secondary: '#FCA34D',
     tertiary: "#D6CDFE",
+    zopa: "#E9EAFA",
+    zopa_dark_purple: "#22247F",
     blue: "#150B3D",
     white: "#FFFFFE",
     secondaryWhite: '#F7F7F7',

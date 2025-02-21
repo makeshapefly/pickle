@@ -12,6 +12,8 @@ public class AvailableSession {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
+    private int people;
+
     private int bookings; //no of people booked
 
     private int maxNo; //max number if people session can accommodate
@@ -90,5 +92,13 @@ public class AvailableSession {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getPeople() {
+        return people;
+    }
+
+    public void setPeople(int people) {
+        this.people = people;
     }
 }
