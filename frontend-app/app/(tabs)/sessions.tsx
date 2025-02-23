@@ -29,26 +29,6 @@ const sendHistoryRoute = () => {
   )
 }
 
-const requestHistoryRoute = () => {
-  return (
-    <View style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
-      <FlatList
-        data={requestHistoryData}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <SessionCard
-            name={item.name}
-            avatar={item.avatar}
-            date={item.date}
-            amount={item.amount}
-            onPress={() => console.log("View Detail")}
-          />
-        )}
-      />
-    </View>
-  )
-}
-
 
 const SessionsScreen = () => {
   const layout = useWindowDimensions();
@@ -63,7 +43,7 @@ const SessionsScreen = () => {
 
   const allHistoryRoute = () => {
     return (
-      <View style={{ flex: 1, backgroundColor: COLORS.header }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
         <FlatList
           data={sessions}
           keyExtractor={(item, i) => i}
@@ -74,7 +54,8 @@ const SessionsScreen = () => {
               location={item.location}
               avatar={images.clubs}
               date={item.startDate}
-              amount={item.amount}
+              price={item.price}
+              bookingsString={item.bookings  + ' of ' + item.people}
               onPress={() => console.log("View Detail")}
             />
           )}
@@ -127,7 +108,6 @@ const SessionsScreen = () => {
   )
 
   return (
-    <SafeAreaView style={styles.area}>
       <View style={styles.container}>
         <Header title="Sessions" />
         <TabView
@@ -138,7 +118,6 @@ const SessionsScreen = () => {
           renderTabBar={renderTabBar}
         />
       </View>
-    </SafeAreaView>
   )
 }
 
@@ -149,7 +128,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    //backgroundColor: COLORS.header
+    backgroundColor: COLORS.header
   }
 })
 

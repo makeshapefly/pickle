@@ -12,7 +12,7 @@ public class AvailableSession {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    private int people;
+    private int people; //max number if people session can accommodate
 
     private int bookings; //no of people booked
 

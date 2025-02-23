@@ -3,7 +3,9 @@ package com.pickleapp.api_service.service;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.pickleapp.api_service.dto.AvailableSession;
+import com.pickleapp.api_service.entity.Booking;
 import com.pickleapp.api_service.entity.Session;
+import com.pickleapp.api_service.repository.BookingRepository;
 import com.pickleapp.api_service.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class SessionService {
 
     @Autowired
     SessionRepository repository;
+
+    @Autowired
+    BookingRepository bookingRepository;
 
     public String createNewSession(Session session) {
         try {
@@ -40,14 +45,14 @@ public class SessionService {
     }
 
     public List<AvailableSession> getAvailableSessions(Map<String, List<Session>> sessionsByOrg) {
-        Map<Integer, String> daysMapper = new HashMap<Integer, String>();
+        /*Map<Integer, String> daysMapper = new HashMap<Integer, String>();
         daysMapper.put(7,"SUNDAY");
         daysMapper.put(1, "monday".toUpperCase());
         daysMapper.put(2, "tuesday".toUpperCase());
         daysMapper.put(3,"wednesday".toUpperCase());
         daysMapper.put(4, "thursday".toUpperCase());
         daysMapper.put(5,"friday".toUpperCase());
-        daysMapper.put(6, "saturday".toUpperCase());
+        daysMapper.put(6, "saturday".toUpperCase());*/
 
         List<AvailableSession> availableSessions = new ArrayList<AvailableSession>();
 
@@ -94,6 +99,13 @@ public class SessionService {
                         //set time of session
                         LocalDateTime sessionStartDateAndTime = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), startHr, startMin);
                         LocalDateTime sessionEndDateAndTime = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), endHr, endMin);
+                        System.out.println("sessionStartDateAndTime: " + sessionStartDateAndTime);
+                        System.out.println("sessionEndDateAndTime: " + sessionEndDateAndTime);
+
+                        //get number of bookings
+                        List<Booking> bookingsList = bookingRepository.findBookingsBySessionIdAndSessionDate(session.getId(), Date.from(sessionStartDateAndTime.atZone(ZoneId.systemDefault()).toInstant()));
+                        availableSession.setBookings(bookingsList.size());
+                        System.out.println("bookingsList.size(): " + bookingsList.size());
 
                         //get config
                         String config = session.getConfig();
@@ -110,12 +122,19 @@ public class SessionService {
                             availableSession.setBookableNow(true);
                         }
 
+                        if (availableSession.getBookings() >= availableSession.getPeople()) {
+                            availableSession.setBookableNow(false);
+                        }
+
 
                         availableSession.setStartDate(sessionStartDateAndTime);
                         availableSession.setEndDate(sessionEndDateAndTime);
                         availableSession.setPrice(session.getPrice());
                     }
-                    availableSessions.add(availableSession);
+
+                    if (availableSession.isBookableNow()) {
+                        availableSessions.add(availableSession);
+                    }
                     today = today.plusDays(1);
                 }
             }
