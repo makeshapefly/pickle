@@ -3,7 +3,7 @@ import { Kysely } from 'kysely'
 import { OrganisationWithMembers, Database } from '@/lib/database/types'
 
 export async function getOrganisation(
-    //db: Kysely<Database>,
+    db: Kysely<Database>,
     org: number,
 ) {
     try {

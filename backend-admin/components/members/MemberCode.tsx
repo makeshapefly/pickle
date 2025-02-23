@@ -1,8 +1,10 @@
 import { getOrganisation } from '@/app/db/OrganisationRepository'
+import { db } from "@/lib/database/db";
 
 
 export default async function MembersCode({user}) {
-    const response = await getOrganisation(user.organisation)
+    const response: any = await getOrganisation(db, user.organisation)
+    console.log(JSON.stringify(response))
     const joinCode = response.join_code
 
     return (
