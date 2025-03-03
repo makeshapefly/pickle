@@ -20,6 +20,8 @@ public class AvailableSession {
 
     private boolean isBookableNow;
 
+    private boolean isFullyBooked;
+
     private float price;
 
     public UUID getId() {
@@ -80,6 +82,14 @@ public class AvailableSession {
 
     public boolean isBookableNow() {
         return isBookableNow;
+    }
+
+    public boolean isFullyBooked() {
+        return isFullyBooked;
+    }
+
+    public void setFullyBooked(boolean fullyBooked) {
+        isFullyBooked = fullyBooked;
     }
 
     public void setBookableNow(boolean bookableNow) {

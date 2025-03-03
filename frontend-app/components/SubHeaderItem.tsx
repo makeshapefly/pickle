@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 16,
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   subtitleContainer: {
     flexDirection: 'row',
@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: 'medium',
-    color: COLORS.primary,
+    color: COLORS.white,
   },
   subtitle: {
     fontSize: 14,
     fontFamily: 'medium',
-    color: COLORS.primary
+    color: COLORS.white
   },
 });
 

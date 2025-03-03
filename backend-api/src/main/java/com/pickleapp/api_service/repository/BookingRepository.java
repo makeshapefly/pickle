@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface BookingRepository extends CrudRepository<Booking, UUID> {
     List<Booking> findBookingsBySessionIdAndSessionDate(UUID sessionId, Date sessionDate);
+    List<Booking> findBookingsByMemberId(UUID memberId);
 }

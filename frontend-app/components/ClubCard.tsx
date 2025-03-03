@@ -10,23 +10,16 @@ interface CardProps {
 }
 const ClubCard: React.FC<CardProps> = ({ name, onPress, containerStyle }) => {
   return (
-    <div>
       <TouchableOpacity
         onPress={onPress}
         style={[styles.container, containerStyle]} >
         <View style={styles.headerContainer}>
           <Text style={styles.cardNumber}>{name}</Text>
-          <Image
-            source={images.clubLogo}
-            contentFit='contain'
-            style={styles.icon}
-          />
         </View>
         <Text style={styles.cardNumber}></Text>
         <View style={styles.footerContainer}>
         </View>
       </TouchableOpacity>
-    </div>
   )
 }
 

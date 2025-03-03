@@ -40,8 +40,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         paddingHorizontal: 16,
-        paddingTop: 8,
-        marginBottom: 16,
+        paddingTop: 18,
+        marginTop:20,
+        marginBottom: 6,
         backgroundColor: COLORS.white,
     },
     backIcon: {

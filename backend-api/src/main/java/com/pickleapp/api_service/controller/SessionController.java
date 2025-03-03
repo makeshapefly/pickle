@@ -56,14 +56,11 @@ public class SessionController {
         try {
             if (member != null) {
                 Set<Organisation> orgs = member.getOrganisations();
-                System.out.println("orgs: " + orgs);
                 if (orgs != null) {
                     Iterator<Organisation> iterator = orgs.iterator();
                     while (iterator.hasNext()) {
                         Organisation org = iterator.next();
-                        System.out.println("org.getId(): " + org.getId());
                         List<Session> sessions = service.getSessionsByOrg(org.getId());
-                        System.out.println("sessions: " + sessions.size());
                         sessionsByOrg.put(org.getOrgName(), sessions);
                     }
                 }
@@ -73,7 +70,7 @@ public class SessionController {
         }
 
         //call sessions service to get available sessions per org
-        List<AvailableSession> availableSessions = service.getAvailableSessions(sessionsByOrg);
+        List<AvailableSession> availableSessions = service.getAvailableSessions(member.getId(), sessionsByOrg);
 
         return ResponseEntity.ok(availableSessions);
     }

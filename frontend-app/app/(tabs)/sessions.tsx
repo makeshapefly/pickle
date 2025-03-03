@@ -8,25 +8,15 @@ import { allHistoryData, requestHistoryData, sendHistoryData } from '../../data'
 import SessionCard from '../../components/SessionCard'
 import { useAuth } from '@clerk/clerk-react'
 
-
-const sendHistoryRoute = () => {
-  return (
-    <View style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
-      <FlatList
-        data={sendHistoryData}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <SessionCard
-            name={item.name}
-            avatar={images.clubs}
-            date={item.date}
-            amount={item.amount}
-            onPress={() => console.log("View Detail")}
-          />
-        )}
-      />
-    </View>
-  )
+type session = {
+  id: string,
+  name: string,
+  date: Date,
+  amount: number,
+  location: string,
+  bookingString: string,
+  people: number,
+  isBookable: boolean,
 }
 
 
@@ -36,12 +26,39 @@ const SessionsScreen = () => {
 
   const [index, setIndex] = React.useState(0);
   const [sessions, setSessions] = React.useState({})
+  const [sessionsBooked, setSessionsBooked] = React.useState({})
   const [routes] = React.useState([
     { key: 'first', title: 'Available' },
     { key: 'second', title: 'Booked' },
   ]);
 
-  const allHistoryRoute = () => {
+  const booked = () => {
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
+        <FlatList
+          data={sessionsBooked}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <SessionCard
+              id={item.id}
+              name={item.name}
+              location={item.location}
+              avatar={images.clubs}
+              date={item.startDate}
+              price={item.price}
+              people={item.people}
+              isBookable={item.bookableNow}
+              bookingsString={item.bookings + ' of ' + item.people}
+              onPress={() => console.log("View Detail")}
+            />
+          )}
+        />
+      </View>
+    )
+  }
+
+
+  const available = () => {
     return (
       <View style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
         <FlatList
@@ -55,7 +72,9 @@ const SessionsScreen = () => {
               avatar={images.clubs}
               date={item.startDate}
               price={item.price}
-              bookingsString={item.bookings  + ' of ' + item.people}
+              people={item.people}
+              isBookable={item.bookableNow}
+              bookingsString={item.bookings + ' of ' + item.people}
               onPress={() => console.log("View Detail")}
             />
           )}
@@ -65,25 +84,38 @@ const SessionsScreen = () => {
   }
 
   const renderScene = SceneMap({
-    first: allHistoryRoute,
-    second: sendHistoryRoute,
+    first: available,
+    second: booked,
   });
 
   useEffect(() => {
-      sessionDetails()
-    }, []);
+    sessionDetails()
+    bookedSessions()
+  }, []);
 
-   const sessionDetails = async () => {
-      const token = await getToken()
-      const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'session/available', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await response.json()
-      console.log(JSON.stringify(data))
-      setSessions(data)    
-    }
+  const sessionDetails = async () => {
+    const token = await getToken()
+    const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'session/available', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const data = await response.json()
+    console.log(JSON.stringify(data))
+    setSessions(data)
+  }
+
+  const bookedSessions = async () => {
+    const token = await getToken()
+    const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'booking/', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const data = await response.json()
+    console.log(JSON.stringify(data))
+    setSessionsBooked(data)
+  }
 
   const renderTabBar = (props: any) => (
     <TabBar
@@ -108,16 +140,16 @@ const SessionsScreen = () => {
   )
 
   return (
-      <View style={styles.container}>
-        <Header title="Sessions" />
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{ width: layout.width }}
-          renderTabBar={renderTabBar}
-        />
-      </View>
+    <View style={styles.container}>
+      <Header title="Sessions" />
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        renderTabBar={renderTabBar}
+      />
+    </View>
   )
 }
 
@@ -128,7 +160,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: COLORS.header
+    backgroundColor: COLORS.white
   }
 })
 

@@ -1,5 +1,6 @@
 com/pickleapp/api_service/service/SessionService.class
 com/pickleapp/api_service/entity/Member.class
+com/pickleapp/api_service/dto/BookedSession.class
 com/pickleapp/api_service/controller/SessionController.class
 com/pickleapp/api_service/repository/BookingRepository.class
 com/pickleapp/api_service/dto/AvailableSession.class

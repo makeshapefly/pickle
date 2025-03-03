@@ -4,6 +4,7 @@
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/controller/MemberController.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/controller/SessionController.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/dto/AvailableSession.java
+/customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/dto/BookedSession.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Booking.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Member.java
 /customers/pickle/backend-api/src/main/java/com/pickleapp/api_service/entity/Organisation.java

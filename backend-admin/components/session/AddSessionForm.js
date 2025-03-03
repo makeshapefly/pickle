@@ -38,6 +38,7 @@ const schema = (isTab2) =>
             .matches(/^[0-9]+\.[0-9]{2}$|[0-9]+\.[0-9]{2}[^0-9]/, "Price format must be XX.XX"),
         payment: Yup.array().min(1, "You must select at least one approved payment method"),
         window: Yup.number().required("Please enter an advanced booking window").min(1, "You can't have zero days or below").max(500, "You can't book more than 500 days in advance"),
+        windowClose: Yup.number().required("Please enter the number of hours before the booking closes").min(0, "You can't have below zero hours or below").max(5000, "Advanced Bokking Error"),
         people: Yup.number().required("Please enter the maximum number of people for this session").min(1, "You can't have one or less people").max(500, "You can't have more than 500 people"),
         startTime: Yup.string().required("Please enter a start time"),
         endTime: Yup.string().required("Please enter an end time")
@@ -66,6 +67,7 @@ const AddSessionForm = ({ user }) => {
             paymentRequired: false,
             payment: [],
             window: null,
+            windowClose: null,
             active: true,
         },
 
@@ -107,6 +109,7 @@ const AddSessionForm = ({ user }) => {
 
                 let config = {}
                 config.window = values.window
+                config.windowClose = values.windowClose
                 config.payment = values.payment
                 config.paymentRequired = values.paymentRequired
 
@@ -437,18 +440,16 @@ const AddSessionForm = ({ user }) => {
                 <div className="wg-box">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap14">
-                            <h5 className="mb-4">Booking Window</h5>
+                            <h5 className="mb-3">Booking Window</h5>
                         </div>
                         <div className="body-text mb-2">
                             {/*<img src="/images/bg-menu/serve.png" width="50px" alt="" />*/}
                         </div>
                     </div>
-                    <div className="left">
-                        <div className="body-text"><p>Number of days before the session that players can book in.</p></div>
-                    </div>
                     <div className="row">
-                        <div className="col-xl-4 mb-20">
+                        <div className="col-xl-6 col-sm-6 col-6 mb-20">                      
                             <div className="right flex-grow">
+                            <div className="body-title mb-20">Open the Session for booking X days in advance.</div>
                                 <fieldset>
                                     <input type="number" onChange={handleChange} name="window" id="window" value={values.window} tabIndex={0} style={{ fontSize: '2rem', width: '100%' }} />
                                 </fieldset>
@@ -459,8 +460,18 @@ const AddSessionForm = ({ user }) => {
                                 ) : null}
                             </div>
                         </div>
-                        <div className="col-xl-4 mb-20">
-                            <h5 className="mb-20">days</h5>
+                        <div className="col-xl-6 col-sm-6 col-6 mb-20">
+                            <div className="right flex-grow">
+                            <div className="body-title mb-20">Close the Session for booking X hours in advance.</div>
+                                <fieldset>
+                                    <input type="number" onChange={handleChange} name="windowClose" id="windowClose" value={values.windowClose} tabIndex={0} style={{ fontSize: '2rem', width: '100%' }} />
+                                </fieldset>
+                                {errors.windowClose && touched.windowClose ? (
+                                    <div style={{ marginTop: 10 }}>
+                                        <TextError id="windowClose">{errors.windowClose}</TextError>
+                                    </div>
+                                ) : null}
+                            </div>
                         </div>
                     </div>
 

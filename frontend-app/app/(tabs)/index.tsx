@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, ImageBackground } from 'react-native'
 import React, { useContext, useEffect } from 'react'
 import { COLORS, images, icons, SIZES } from '../../constants'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -95,20 +95,10 @@ const HomeScreen = () => {
     return (
       <View style={styles.balanceCard}>
         <View style={styles.balanceCardView}>
-          <Text style={styles.balanceText}>Next Session</Text>
-          <Text style={styles.balanceValue}>15th March 2025</Text>
+          <Text style={styles.balanceValue}>15th March 2025</Text><Text style={{ backgroundColor: '#3C5C8B', padding: 7, borderRadius: 30, color: COLORS.white }}>14:00 - 15:00</Text>
         </View>
         <View style={styles.featureColumn}>
           <View style={styles.profileLeftContainer}>
-            <View>
-              <Image
-                source={images.clubLogo}
-                contentFit='contain'
-                style={styles.icon}
-              />
-              <TouchableOpacity>
-              </TouchableOpacity>
-            </View>
             <View style={{ marginLeft: 16, marginTop: 5 }}>
               <Text style={styles.name}>Purple Pickleball</Text>
             </View>
@@ -155,64 +145,61 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.area}>
-      <StatusBar style="light" />
-      <View style={styles.container}>
-        <View style={styles.profileContainer}>
-          <View style={styles.profileLeftContainer}>
-            <View>
-              <FontAwesome5 name="user-circle" size={32} color="black" />
+      <ImageBackground source={images.bg} style={styles.bg}>
+        <StatusBar style="light" />
+
+        <View style={styles.container}>
+
+          <View style={styles.profileContainer}>
+            <View style={styles.profileLeftContainer}>
+              <View>
+                <FontAwesome5 name="user-circle" size={32} color="white" />
+              </View>
+              <View style={{ marginLeft: 16 }}>
+                <Text style={{ color: 'white' }}>Welcome</Text>
+                <Text style={{ color: 'white' }}>{userDetails.firstName}</Text>
+              </View>
             </View>
-            <View style={{ marginLeft: 16 }}>
-              <Text style={styles.name}>Welcome</Text>
-              <Text style={styles.name}>{userDetails.firstName}</Text>
+            <View style={styles.profileRightContainer}>
+              <Image
+                source={icons.alerts}
+                contentFit='contain'
+                style={styles.icon}
+              />
             </View>
           </View>
-          <View style={styles.profileRightContainer}>
-            <Image
-              source={icons.email}
-              contentFit='contain'
-              style={styles.icon}
-            />
+          <View style={{ top: -40 }}>
+            <SubHeaderItem
+              title="Booked Sessions"
+              subtitle="View All"
+              onPress={() => navigate("yourcard")}
+            />           
           </View>
+          {renderBalanceCard()}
+
         </View>
 
-        {renderBalanceCard()}
-        <ScrollView style={{ top: -40 }}>
-          <SubHeaderItem
-            title="Upcoming Sessions"
-            subtitle="View All"
-            onPress={() => navigate("yourcard")}
-          />
-          {renderAllSessions()}
-
-          <SubHeaderItem
-            title="Your Clubs"
-            subtitle="View All"
-            onPress={() => navigate("yourcard")}
-          />
-          {renderAllDebitCard()}
-        </ScrollView>
-      </View>
+      </ImageBackground>
     </SafeAreaView>
   )
-}
+}//
 
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: COLORS.header,
+    //backgroundColor: COLORS.white,
     margin: 0,
-    height: "100%"
+    height: "100%",
   },
   container: {
     flex: 1,
-    backgroundColor: COLORS.header,
+    //backgroundColor: COLORS.white,
   },
   headerContainer: {
-    backgroundColor: COLORS.header,
+    backgroundColor: COLORS.white,
     alignItems: "center",
-    height: 72,
-    paddingVertical: 16
+    height: 92,
+    paddingVertical: 16,
   },
   greeting: {
     fontSize: 14,
@@ -256,7 +243,7 @@ const styles = StyleSheet.create({
   balanceText: {
     fontSize: 16,
     fontFamily: "regular",
-    color: "black",
+    color: "#3C5C8B",
   },
   balanceValue: {
     fontSize: 16,
@@ -336,13 +323,13 @@ const styles = StyleSheet.create({
     color: COLORS.primary
   },
   profileContainer: {
-    height: 120,
-    width: SIZES.width - 32,
+    height: 150,
+    width: SIZES.width,
     borderRadius: 10,
-    padding: 10,
-    backgroundColor: COLORS.header,
-    marginHorizontal: 16,
-    marginVertical: 6,
+    padding: 20,
+    //backgroundColor: COLORS.header,
+    //marginHorizontal: 16,
+    //marginVertical: 6,
     top: -22,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -377,7 +364,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: 28,
-    height: 28
+    height: 28,
   },
+  bg: {
+    width: '100%',
+    height: '100%',
+  }
 })
-export default HomeScreen
+export default HomeScreen 

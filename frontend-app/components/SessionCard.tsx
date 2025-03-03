@@ -5,9 +5,6 @@ import { COLORS, SIZES, icons, images } from '../constants'
 import { useAuth } from '@clerk/clerk-react'
 import Colors from '@/constants/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Button from '../components/Button'
-import Slider from '@react-native-community/slider';
-import { Feather } from '@expo/vector-icons'
 import { ScrollView } from 'react-native-virtualized-view'
 import { useNavigation } from 'expo-router'
 
@@ -20,9 +17,6 @@ interface ContainerProps {
 type Nav = {
     navigate: (value: string) => void
 }
-
-const data = [100, 200, 250, 300, 400, 500, 600, 700, 1000];
-
 
 const Container: React.FC<ContainerProps> = ({ item, isSelected, onSelect }) => (
     <TouchableOpacity
@@ -53,12 +47,11 @@ type Booking = {
     sessionDate: string;
 };
 
-const SessionCard: React.FC<SessionCardProps> = ({ avatar, id, name, location, date, price, bookingsString, onPress }) => {
+const SessionCard: React.FC<SessionCardProps> = ({ avatar, id, name, location, date, price, people, isBookable, bookingsString, onPress }) => {
     const { getToken } = useAuth()
     const [buttonText, setButtonText] = React.useState('Book In')
     const navigation = useNavigation();
     const { navigate } = useNavigation<Nav>()
-    const [modalVisible, setModalVisible] = useState(false);
 
     const eventDate = Date.parse(date);
     let eventAsDate = new Date(eventDate);
@@ -67,10 +60,11 @@ const SessionCard: React.FC<SessionCardProps> = ({ avatar, id, name, location, d
         year: "numeric",
         month: "long",
         day: "numeric",
-      };
-      const dateString = eventAsDate.toLocaleDateString("en-GB", options)
+    };
+    const dateString = eventAsDate.toLocaleDateString("en-GB", options)
 
-    const bookSession = async () =>  {
+
+    const bookSession = async () => {
         let booking: Booking = {
             sessionId: id,
             sessionDate: date,
@@ -101,96 +95,8 @@ const SessionCard: React.FC<SessionCardProps> = ({ avatar, id, name, location, d
         }
     }
 
-    const renderHeader = () => {
-        return (
-            <View style={styles.headerContainer}>
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                >
-                    <Image
-                        source={icons.back}
-                        contentFit='contain'
-                        style={styles.backIcon}
-                    />
-                </TouchableOpacity>
-                <Text style={styles.title}>Send</Text>
-                <TouchableOpacity>
-                    <Image
-                        source={icons.more}
-                        contentFit='contain'
-                        style={styles.moreIcon}
-                    />
-                </TouchableOpacity>
-            </View>
-        )
-    }
-
-    /**
-     * Render Card Information
-     */
-
-    const renderCardInfo = () => {
-        return (
-            <View style={styles.cardInfoContainer}>
-                <View style={{
-                    flexDirection: "row",
-                    alignItems: "center"
-                }}>
-                    <View style={styles.cardContainer}>
-                        <View style={styles.typeCardContainer}>
-                            <Text style={styles.typeCard}>Payment Card</Text>
-                            <Image
-                                source={images.cardLogo}
-                                contentFit='contain'
-                                style={styles.cardLogo}
-                            />
-                        </View>
-                        <Text style={styles.cardNumber}>gg</Text>
-                        <View style={styles.bottomCardContainer}>
-                            <Text style={styles.amount}>$2885.00</Text>
-                            <Text style={styles.date}>12/24</Text>
-                        </View>
-                    </View>
-                    <Text style={styles.debit}>Debit</Text>
-                </View>
-
-                <View style={{
-                    flexDirection: "row",
-                    alignItems: "center"
-                }}>
-                    <Text style={{
-                        fontFamily: "semiBold",
-                        color: COLORS.primary,
-                        fontSize: 16
-                    }}>$364.00</Text>
-                    <Image
-                        source={icons.down}
-                        contentFit='contain'
-                        style={{
-                            height: 12,
-                            width: 12,
-                            tintColor: "gray"
-                        }}
-                    />
-                </View>
-            </View>
-        )
-    }
-
     // Render Send
-    const renderSend = () => {
-        const [sliderValue, setSliderValue] = useState(0);
-        const [selectedContainer, setSelectedContainer] = useState(null);
-
-        const handleSelectContainer = (item: any): void => {
-            setSelectedContainer(item);
-        };
-
-        const handleSliderChange = (value: number): void => {
-            setSliderValue(value);
-        };
-
-
+    const renderCard = () => {
         return (
             <View style={{
                 marginHorizontal: 16
@@ -227,105 +133,44 @@ const SessionCard: React.FC<SessionCardProps> = ({ avatar, id, name, location, d
                             }}>{location}</Text>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.btn}>
-                        <Text style={styles.btnText} onPress={bookSession}>{buttonText}</Text>
-                    </TouchableOpacity>
+
                 </View>
 
-                <Text style={styles.subtitle}>{bookingsString} spaces taken</Text>
+                <View>
+                    <Text style={styles.subtitle}>{bookingsString} spaces taken</Text>
+                </View>
 
-                <Text style={{
-                    fontSize: 32,
-                    color: COLORS.primary,
-                    fontFamily: 'semiBold',
-                    marginVertical: 6
-                }}>£{price}</Text>
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginVertical: 12
+                }}>
+                    <Text style={{
+                        fontSize: 32,
+                        color: COLORS.primary,
+                        fontFamily: 'semiBold',
+                        marginVertical: 6
+                    }}>£{price}</Text>
+                    {isBookable &&
+                        <TouchableOpacity style={styles.btn}>
+                            <Text style={styles.btnText} onPress={bookSession}>{buttonText}</Text>
+                        </TouchableOpacity>
+                    }
+                </View>
             </View>
-        )
-    }
-
-    const renderModal = () => {
-        return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-            >
-                <TouchableWithoutFeedback
-                    onPress={() => setModalVisible(false)}
-                >
-                    <View
-                        style={{
-                            flex: 1,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "rgba(0,0,0,0.2)"
-
-                        }}
-                    >
-                        <View
-                            style={{
-                                height: 494,
-                                width: SIZES.width * 0.9,
-                                backgroundColor: COLORS.white,
-                                borderRadius: 12,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                padding: 16
-                            }}
-                        >
-                            <Image
-                                source={images.success}
-                                contentFit='contain'
-                                style={{
-                                    height: 217,
-                                    width: 217,
-                                    marginVertical: 22
-                                }}
-                            />
-                            <Text style={{
-                                fontSize: 24,
-                                fontFamily: "semiBold",
-                                color: COLORS.primary,
-                                textAlign: "center",
-                                marginVertical: 6
-                            }}>Sent Successfully</Text>
-                            <Text style={{
-                                fontSize: 14,
-                                fontFamily: "regular",
-                                color: COLORS.primary,
-                                textAlign: "center",
-                                marginVertical: 22
-                            }}>The amount  will be send to the account with in few minutes</Text>
-                            <Button
-                                title="Continue"
-                                filled
-                                onPress={() => {
-                                    setModalVisible(false)
-                                    navigate("sendmoneysuccess")
-                                }}
-                                style={{
-                                    width: "100%",
-                                    marginTop: 12
-                                }}
-                            />
-                        </View>
-                    </View>
-                </TouchableWithoutFeedback>
-            </Modal>
         )
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={{ flex: 1, backgroundColor: COLORS.primary }}>
-                <View style={{ flex: 1, backgroundColor: COLORS.white }}>
+        <SafeAreaView style={isBookable ? styles.container : styles.containerNotAvailable}>
+            <View style={{ flex: 1, backgroundColor: isBookable ? COLORS.primary: COLORS.fullyBooked }}>
+                <View style={{ flex: 1, backgroundColor: isBookable ? COLORS.white: COLORS.fullyBooked }}>
                     <ScrollView>
-                        {renderSend()}
+                        {renderCard()}
                     </ScrollView>
                 </View>
             </View>
-            {renderModal()}
         </SafeAreaView>
     )
 }
@@ -340,6 +185,18 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         backgroundColor: COLORS.white,
+        marginHorizontal: 16,
+        marginVertical: 6
+    },
+    containerNotAvailable: {
+        //height: 150,
+        width: SIZES.width - 32,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderRadius: 10,
+        padding: 10,
+        backgroundColor: COLORS.fullyBooked,
         marginHorizontal: 16,
         marginVertical: 6
     },

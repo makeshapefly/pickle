@@ -36,7 +36,6 @@ public class SessionService {
 
     public List<Session> getSessionsByOrg(long orgId) {
         try {
-            //System.out.println("repository.findByOrganisationId(orgId): " + repository.findByOrganisationId(orgId));
             return repository.findByOrganisationId(orgId);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -44,16 +43,7 @@ public class SessionService {
         }
     }
 
-    public List<AvailableSession> getAvailableSessions(Map<String, List<Session>> sessionsByOrg) {
-        /*Map<Integer, String> daysMapper = new HashMap<Integer, String>();
-        daysMapper.put(7,"SUNDAY");
-        daysMapper.put(1, "monday".toUpperCase());
-        daysMapper.put(2, "tuesday".toUpperCase());
-        daysMapper.put(3,"wednesday".toUpperCase());
-        daysMapper.put(4, "thursday".toUpperCase());
-        daysMapper.put(5,"friday".toUpperCase());
-        daysMapper.put(6, "saturday".toUpperCase());*/
-
+    public List<AvailableSession> getAvailableSessions(UUID memberId, Map<String, List<Session>> sessionsByOrg) {
         List<AvailableSession> availableSessions = new ArrayList<AvailableSession>();
 
         for (String i : sessionsByOrg.keySet()) {
@@ -73,14 +63,25 @@ public class SessionService {
                 int startMin = startDate.getMinute();
                 int endHr = endDate.getHour();
                 int endMin = endDate.getMinute();
-                LocalDateTime sixMonthsAhead = today.plusMonths(6);
-                System.out.println("sixMonthsAhead: " + sixMonthsAhead);
+
+                //get config
+                String config = session.getConfig();
+                JsonParser parser = new JsonParser();
+                JsonObject JSONObject = parser.parse(config).getAsJsonObject();
+                Integer window = JSONObject.get("window").getAsInt();
+                Integer windowClose = JSONObject.get("windowClose") != null ? JSONObject.get("windowClose").getAsInt(): 2;
 
                 //is populate to date 6 months or before
-                LocalDateTime populateToDate = endDate.isBefore(sixMonthsAhead) ? endDate : sixMonthsAhead;
+                LocalDateTime sessionStartDateAndTimeForWindow = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), startHr, startMin);
+                LocalDateTime populateToDate = endDate.isBefore(sessionStartDateAndTimeForWindow) ? startDate : sessionStartDateAndTimeForWindow.plusDays(window);
+                populateToDate = populateToDate.withHour(23);
+                LocalDateTime sessionEndDateAndTimeForWindow = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), endHr, endMin);
+                System.out.println("sessionStartDateAndTime: " + sessionStartDateAndTimeForWindow);
+                System.out.println("sessionEndDateAndTime: " + sessionEndDateAndTimeForWindow);
                 System.out.println("populateToDate: " + populateToDate);
 
                 while (today.isBefore(populateToDate)) {
+                    System.out.println("************************************");
                     AvailableSession availableSession = new AvailableSession();
                     DayOfWeek dayOfWeek = today.getDayOfWeek();
                     System.out.println("dayOfWeek: " + dayOfWeek);
@@ -105,37 +106,42 @@ public class SessionService {
                         //get number of bookings
                         List<Booking> bookingsList = bookingRepository.findBookingsBySessionIdAndSessionDate(session.getId(), Date.from(sessionStartDateAndTime.atZone(ZoneId.systemDefault()).toInstant()));
                         availableSession.setBookings(bookingsList.size());
-                        System.out.println("bookingsList.size(): " + bookingsList.size());
-
-                        //get config
-                        String config = session.getConfig();
-                        JsonParser parser = new JsonParser();
-                        JsonObject JSONObject = parser.parse(config).getAsJsonObject();
-                        Integer window = JSONObject.get("window").getAsInt();
+                        boolean callerBookedOn = false;
+                        for (Booking booking: bookingsList) {
+                            if (booking.getMemberId().equals(memberId)) {
+                                callerBookedOn = true;
+                            }
+                        }
 
                         availableSession.setPeople(session.getPeople());
                         //work out if bookable
                         LocalDateTime windowDate = sessionStartDateAndTime.minusDays(window);
+                        LocalDateTime windowCloseDate = sessionStartDateAndTime.minusHours(windowClose);
                         System.out.println("windowDate: " + windowDate);
                         System.out.println("today: " + today);
-                        if (LocalDateTime.now().isAfter(windowDate)) {
+                        if (LocalDateTime.now().isAfter(windowDate) && LocalDateTime.now().isBefore(windowCloseDate)) {
                             availableSession.setBookableNow(true);
                         }
 
                         if (availableSession.getBookings() >= availableSession.getPeople()) {
                             availableSession.setBookableNow(false);
+                            availableSession.setFullyBooked(true);
                         }
 
+                        if (callerBookedOn) {
+                            availableSession.setBookableNow(false);
+                        }
 
                         availableSession.setStartDate(sessionStartDateAndTime);
                         availableSession.setEndDate(sessionEndDateAndTime);
                         availableSession.setPrice(session.getPrice());
                     }
 
-                    if (availableSession.isBookableNow()) {
+                    //if (availableSession.isBookableNow()) {
                         availableSessions.add(availableSession);
-                    }
+                    //}
                     today = today.plusDays(1);
+                    System.out.println("************************************");
                 }
             }
         }
@@ -144,4 +150,7 @@ public class SessionService {
 
     }
 
+    public Optional<Session> getSessionsById(UUID sessionId) {
+        return repository.findById(sessionId);
+    }
 }

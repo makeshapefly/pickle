@@ -8,6 +8,7 @@ export const COLORS = {
     tertiary: "#D6CDFE",
     zopa: "#E9EAFA",
     zopa_dark_purple: "#22247F",
+    zopa_green: "#01A2A6",
     blue: "#150B3D",
     white: "#FFFFFE",
     secondaryWhite: '#F7F7F7',
@@ -19,6 +20,7 @@ export const COLORS = {
     red: "#FF0000",
     green: "#00BE00",
     header: "#F7F5F2",
+    fullyBooked: '#E7E6E2',
     tansparentPrimary: "rgba(0, 154, 118, .15)"
 };
 

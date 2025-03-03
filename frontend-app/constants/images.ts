@@ -29,6 +29,7 @@ const error = require("../assets/images/error.png") as string;
 const logo = require("../assets/images/smash.png") as string;
 const clubs = require("../assets/images/clubs.png") as string;
 const clubLogo = require("../assets/images/serve.png") as string;
+const bg = require("../assets/images/background6.jpg") as string;
 
 const images = {
     avatar1,
@@ -57,7 +58,8 @@ const images = {
     error,
     logo,
     clubs,
-    clubLogo
+    clubLogo,
+    bg,
 }
 
 export default images;
