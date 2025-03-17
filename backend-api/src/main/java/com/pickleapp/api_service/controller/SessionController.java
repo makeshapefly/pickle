@@ -76,7 +76,7 @@ public class SessionController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Session> newMember(@RequestBody Session newSession, @AuthenticationPrincipal Jwt principal) {
+    public ResponseEntity<Session> newSession(@RequestBody Session newSession, @AuthenticationPrincipal Jwt principal) {
         newSession.setCreatedAt(new Date());
 
         String response = service.createNewSession(newSession);

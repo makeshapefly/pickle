@@ -98,7 +98,7 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="statistic"
+        name="clubs"
         options={{
           title: "",
           tabBarIcon: ({ focused }: { focused: boolean }) => {
@@ -109,7 +109,7 @@ const TabLayout = () => {
                 width: 72
               }}>
                 <Image
-                  source={focused ? icons.pulse : icons.pulse}
+                  source={focused ? icons.clubs : icons.clubs}
                   contentFit="contain"
                   style={{
                     width: 24,
@@ -122,7 +122,7 @@ const TabLayout = () => {
                   fontFamily: "regular",
                   color: focused ? COLORS.primary : "black",
                   marginTop: 4
-                }}>Statistic</Text>
+                }}>Clubs</Text>
               </View>
             )
           },

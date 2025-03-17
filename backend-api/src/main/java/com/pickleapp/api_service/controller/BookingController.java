@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/booking")
@@ -46,5 +47,10 @@ public class BookingController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/session/{sessionId}/date/{sessionDate}")
+    public ResponseEntity<List<Booking>> getBookingsBySessionIdAndDate(@AuthenticationPrincipal Jwt principal, @PathVariable UUID sessionId, @PathVariable Date sessionDate) {
+        return service.getBookingsBySessionAndDate(sessionId, sessionDate);
     }
 }

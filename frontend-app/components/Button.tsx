@@ -39,12 +39,12 @@ const styles = StyleSheet.create({
     btn: {
         paddingHorizontal: SIZES.padding,
         paddingVertical: SIZES.padding,
-        borderColor: COLORS.primary,
+        //borderColor: COLORS.primary,
         borderWidth: 2,
-        borderRadius: SIZES.radius,
+        //borderRadius: SIZES.radius,
         alignItems: 'center',
         justifyContent: 'center',
-        height: 52
+        height: 52,
     },
 })
 

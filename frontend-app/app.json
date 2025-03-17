@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Financia",
-    "slug": "Financia",
+    "slug": "pickle-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -17,13 +17,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.greenbyte.pickleapp",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#100D40"
-      }
+      },
+      "googleServicesFile": "./google-services.json",
+      "package": "com.greenbyte.pickleapp"
     },
     "web": {
       "bundler": "metro",
@@ -32,10 +36,22 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-build-properties",
+      "@react-native-firebase/app", 
+      "@react-native-firebase/auth"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4cbbea6e-4105-465e-9d3f-5cca313414e5"
+      }
+    },
+    "owner": "tony.turner"
   }
 }

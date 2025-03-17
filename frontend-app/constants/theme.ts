@@ -10,7 +10,7 @@ export const COLORS = {
     zopa_dark_purple: "#22247F",
     zopa_green: "#01A2A6",
     blue: "#150B3D",
-    white: "#FFFFFE",
+    white: "#FFFFFF",
     secondaryWhite: '#F7F7F7',
     tertiaryWhite: '#F2F2F2',
     black: "#707070",

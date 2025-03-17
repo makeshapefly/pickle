@@ -2,7 +2,6 @@ package com.pickleapp.api_service.service;
 
 import com.pickleapp.api_service.dto.BookedSession;
 import com.pickleapp.api_service.entity.Booking;
-import com.pickleapp.api_service.entity.Member;
 import com.pickleapp.api_service.entity.Session;
 import com.pickleapp.api_service.repository.BookingRepository;
 import com.pickleapp.api_service.repository.SessionRepository;
@@ -82,6 +81,14 @@ public class BookingService {
         } catch (Exception ex) {
             return ResponseEntity.badRequest().build();
         }
+    }
 
+    public ResponseEntity<List<Booking>> getBookingsBySessionAndDate(UUID sessionId, Date sessionDate) {
+        try {
+            List<Booking> bookingsList = repository.findBookingsBySessionIdAndSessionDate(sessionId, sessionDate);
+            return ResponseEntity.ok(bookingsList);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

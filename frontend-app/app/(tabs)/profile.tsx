@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { COLORS, SIZES, icons, images } from '../../constants'
 import { Image } from 'expo-image'
@@ -11,6 +11,7 @@ import Button from '../../components/Button'
 import { launchImagePicker } from '../../utils/ImagePickerHelper'
 import { useClerk } from '@clerk/clerk-react'
 import * as Linking from 'expo-linking'
+import auth from '@react-native-firebase/auth';
 
 type Nav = {
   navigate: (value: string) => void
@@ -34,13 +35,25 @@ const ProfileScreen = () => {
   }
 
   const handleSignOut = async () => {
-      try {
-        await signOut()
-        Linking.openURL(Linking.createURL('/'))
-      } catch (err) {
-        console.error(JSON.stringify(err, null, 2))
-      }
+    await auth()
+      .signOut()
+      .then(() => console.log('User signed out!'));
+    //navigate("signin")
+  }
+
+  function onAuthStateChanged(user) {
+    if (user) {
+      console.log("the user: " + JSON.stringify(user))
+    } else {
+      navigate("signin")
     }
+  }
+
+  useEffect(() => {
+    console.log("what is user: " + JSON.stringify(auth().currentUser))
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
 
   const renderModal = () => {
     return (
@@ -129,7 +142,7 @@ const ProfileScreen = () => {
             <TouchableOpacity
               onPress={() => setModalVisible(true)}
               style={styles.btn}>
-              <Button title="Sign out" onPress={handleSignOut} /> 
+              <Button title="Sign out" onPress={handleSignOut} />
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -142,14 +155,14 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: COLORS.primary
+    backgroundColor: '#5EAA79',
   },
   container: {
     flex: 1,
-    backgroundColor: COLORS.secondaryWhite
+    backgroundColor: '#5EAA79',
   },
   headerContainer: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#5EAA79',
     alignItems: "center",
     height: 72,
     paddingVertical: 16

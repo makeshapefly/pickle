@@ -1,22 +1,15 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, ImageBackground } from 'react-native'
-import React, { useContext, useEffect } from 'react'
-import { COLORS, images, icons, SIZES } from '../../constants'
+import React, { useEffect } from 'react'
+import { COLORS, icons, SIZES } from '../../constants'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
-import { Octicons } from '@expo/vector-icons'
-import { Redirect, useNavigation } from 'expo-router'
+import { useNavigation } from 'expo-router'
 import SubHeaderItem from '../../components/SubHeaderItem'
-import Card from '../../components/ClubCard'
-import { userCards } from '../../data'
-import SavingCard from '../../components/SavingCard'
-import { ScrollView } from 'react-native-virtualized-view'
 import { useClerk, useAuth } from '@clerk/clerk-react'
 import * as Linking from 'expo-linking'
-import ClubCard from '../../components/ClubCard'
-import { SimpleLineIcons } from '@expo/vector-icons'
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import auth from '@react-native-firebase/auth';
 
 type Nav = {
   navigate: (value: string) => void
@@ -108,86 +101,49 @@ const HomeScreen = () => {
     )
   }
 
-  // Render User Debit Card
-  const renderAllDebitCard = () => {
-    return (
-      <View style={{ paddingHorizontal: 16 }}>
-        <FlatList
-          horizontal
-          data={userDetails.organisations}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <ClubCard
-              name={item.orgName}
-              onPress={() => console.log("Card Pressed")}
-            />
-          )} />
-      </View>
-    )
-  }
-
-  const renderAllSessions = () => {
-    return (
-      <View style={{ paddingHorizontal: 16 }}>
-        <FlatList
-          horizontal
-          data={userDetails.organisations}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <ClubCard
-              name={item.orgName}
-              onPress={() => console.log("Card Pressed")}
-            />
-          )} />
-      </View>
-    )
-  }
-
   return (
     <SafeAreaView style={styles.area}>
-      <ImageBackground source={images.bg} style={styles.bg}>
-        <StatusBar style="light" />
 
-        <View style={styles.container}>
+      <StatusBar style="light" />
 
-          <View style={styles.profileContainer}>
-            <View style={styles.profileLeftContainer}>
-              <View>
-                <FontAwesome5 name="user-circle" size={32} color="white" />
-              </View>
-              <View style={{ marginLeft: 16 }}>
-                <Text style={{ color: 'white' }}>Welcome</Text>
-                <Text style={{ color: 'white' }}>{userDetails.firstName}</Text>
-              </View>
+      <View style={styles.container}>
+
+        <View style={styles.profileContainer}>
+          <View style={styles.profileLeftContainer}>
+            <View>
+              <FontAwesome5 name="user-circle" size={32} color="white" />
             </View>
-            <View style={styles.profileRightContainer}>
-              <Image
-                source={icons.alerts}
-                contentFit='contain'
-                style={styles.icon}
-              />
+            <View style={{ marginLeft: 16 }}>
+              <Text style={{ color: 'white' }}>Welcome</Text>
+              <Text style={{ color: 'white' }}>{auth().currentUser?.displayName}</Text>
             </View>
           </View>
-          <View style={{ top: -40 }}>
-            <SubHeaderItem
-              title="Booked Sessions"
-              subtitle="View All"
-              onPress={() => navigate("yourcard")}
-            />           
+          <View style={styles.profileRightContainer}>
+            <Image
+              source={icons.alerts}
+              contentFit='contain'
+              style={styles.icon}
+            />
           </View>
-          {renderBalanceCard()}
-
         </View>
+        <View style={{ top: -40 }}>
+          <SubHeaderItem
+            title="Booked Sessions"
+            subtitle="View All"
+            onPress={() => navigate("yourcard")}
+          />
+        </View>
+        {renderBalanceCard()}
 
-      </ImageBackground>
+      </View>
     </SafeAreaView>
   )
 }//
 
 const styles = StyleSheet.create({
   area: {
-    flex: 1,
-    //backgroundColor: COLORS.white,
+    //flex: 1,
+    backgroundColor: '#5EAA79',
     margin: 0,
     height: "100%",
   },

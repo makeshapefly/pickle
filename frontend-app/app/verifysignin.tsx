@@ -7,6 +7,7 @@ import { OtpInput } from "react-native-otp-entry";
 import { useNavigation } from 'expo-router'
 import { useSignIn, useAuth } from '@clerk/clerk-expo'
 import { router } from 'expo-router';
+import auth from '@react-native-firebase/auth';
 
 type Nav = {
     navigate: (value: string) => void;

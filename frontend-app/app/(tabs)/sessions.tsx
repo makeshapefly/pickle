@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import { COLORS, images } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import Header from '../../components/Header';
 import { allHistoryData, requestHistoryData, sendHistoryData } from '../../data';
 import SessionCard from '../../components/SessionCard'
 import { useAuth } from '@clerk/clerk-react'

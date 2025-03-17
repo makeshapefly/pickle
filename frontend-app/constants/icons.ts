@@ -31,6 +31,7 @@ const up = require("../assets/icons/up.png") as string;
 const user = require("../assets/icons/user.png") as string;
 const alerts = require("../assets/icons/icons8-alarm-48.png")
 const userOutline = require("../assets/icons/user_outline.png") as string;
+const clubs = require("../assets/icons/clubs.png") as string;
 
 const icons = {
     add,
@@ -65,7 +66,8 @@ const icons = {
     show,
     up,
     user,
-    userOutline
+    userOutline,
+    clubs
 }
 
 export default icons;
