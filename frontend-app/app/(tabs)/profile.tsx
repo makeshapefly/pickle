@@ -9,8 +9,6 @@ import ProfileItem from '../../components/ProfileItem'
 import { ScrollView } from 'react-native-virtualized-view'
 import Button from '../../components/Button'
 import { launchImagePicker } from '../../utils/ImagePickerHelper'
-import { useClerk } from '@clerk/clerk-react'
-import * as Linking from 'expo-linking'
 import auth from '@react-native-firebase/auth';
 
 type Nav = {
@@ -21,7 +19,6 @@ const ProfileScreen = () => {
   const { navigate } = useNavigation<Nav>();
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState<any>(null);
-  const { signOut } = useClerk()
 
   const pickImage = async () => {
     try {

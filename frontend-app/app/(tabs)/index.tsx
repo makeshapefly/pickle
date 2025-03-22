@@ -6,9 +6,6 @@ import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
 import { useNavigation } from 'expo-router'
 import SubHeaderItem from '../../components/SubHeaderItem'
-import { useClerk, useAuth } from '@clerk/clerk-react'
-import * as Linking from 'expo-linking'
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
 
 type Nav = {
@@ -29,59 +26,9 @@ type User = {
 const HomeScreen = () => {
   const [userDetails, setUserDetails] = React.useState({})
   const { navigate } = useNavigation<Nav>();
-  const { signOut } = useClerk()
-  const { getToken } = useAuth()
 
   useEffect(() => {
-    memberDetails()
   }, []);
-
-  const memberDetails = async () => {
-    const token = await getToken()
-    const response = await fetch(process.env.EXPO_PUBLIC_DB_URL + 'member/', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    if (response.status == 404) {
-
-    }
-
-    if (response.status == 401) {
-
-    }
-
-    if (response.status == 200) {
-      const data = await response.json()
-      let noOfOrgs = data.organisations ? data.organisations.length : 0;
-
-      let user: User = {
-        isSignedIn: true,
-        id: data.id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        mobilePhone: data.mobilePhone,
-        email: data.email,
-        organisations: data.organisations,
-        noOrganisations: noOfOrgs
-      }
-      setUserDetails(user)
-
-      //if (user.firstName == '' || user.firstName == null) {
-      //router.replace('/setupuserdetails')
-      //}
-    }
-  }
-
-  const handleSignOut = async () => {
-    try {
-      await signOut()
-      Linking.openURL(Linking.createURL('/'))
-    } catch (err) {
-      console.error(JSON.stringify(err, null, 2))
-    }
-  }
 
   // Render balance card
   const renderBalanceCard = () => {
@@ -110,8 +57,12 @@ const HomeScreen = () => {
 
         <View style={styles.profileContainer}>
           <View style={styles.profileLeftContainer}>
-            <View>
-              <FontAwesome5 name="user-circle" size={32} color="white" />
+            <View style={{padding: 7, backgroundColor: COLORS.white, borderRadius: 30}}>
+              <Image
+                source={icons.athlete}
+                contentFit='contain'
+                style={styles.icon}
+              />
             </View>
             <View style={{ marginLeft: 16 }}>
               <Text style={{ color: 'white' }}>Welcome</Text>

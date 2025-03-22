@@ -1,14 +1,12 @@
-import { View, Text, useWindowDimensions, TouchableOpacity } from 'react-native'
+import { View, Text, useWindowDimensions } from 'react-native'
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { COLORS, icons } from '../../constants'
+import { COLORS } from '../../constants'
 import { FlatList } from 'react-native'
 import Card from '../../components/ClubCard'
 import Header from '../../components/Header';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import ClubItem from '../../components/ClubItem'
-import { Image } from 'expo-image'
+import ClubsCard from '@/components/ClubsCard'
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -20,7 +18,7 @@ const ClubsScreen = () => {
   const layout = useWindowDimensions();
   const [routes] = React.useState([
     { key: 'first', title: 'My Clubs' },
-    { key: 'second', title: 'All Clubs' },
+    { key: 'second', title: 'Find Clubs' },
   ]);
 
   const getMember = async () => {
@@ -40,9 +38,10 @@ const ClubsScreen = () => {
         setMember(member)
       }
     });
+    getClubs(member)
   }
 
-  const getClubs = async () => {
+  const getClubs = async (member) => {
     const querySnapshot = await firestore()
       .collection('club')
       .get()
@@ -51,6 +50,8 @@ const ClubsScreen = () => {
     let myClubs = [];
     querySnapshot.forEach(documentSnapshot => {
       clubs.push(documentSnapshot.data())
+      console.log("member?.clubs: " + member?.clubs)
+      console.log("documentSnapshot.id: " + documentSnapshot.id)
       if (member?.clubs.includes(documentSnapshot.id)) {
         myClubs.push(documentSnapshot.data())
       }
@@ -63,7 +64,7 @@ const ClubsScreen = () => {
 
   useEffect(() => {
     getMember()
-    getClubs()
+    //getClubs()
   }, []);
 
   const first = () => {
@@ -73,16 +74,8 @@ const ClubsScreen = () => {
           data={myClubs}
           keyExtractor={(item, i) => i}
           renderItem={({ item }) => (
-            <SessionCard
-              id={item.id}
+            <ClubsCard
               name={item.name}
-              location={item.location}
-              avatar={images.clubs}
-              date={item.startDate}
-              price={item.price}
-              people={item.people}
-              isBookable={item.bookableNow}
-              bookingsString={item.bookings + ' of ' + item.people}
               onPress={() => console.log("View Detail")}
             />
           )}
@@ -98,16 +91,8 @@ const ClubsScreen = () => {
           data={clubs}
           keyExtractor={(item, i) => i}
           renderItem={({ item }) => (
-            <SessionCard
-              id={item.id}
+            <ClubsCard
               name={item.name}
-              location={item.location}
-              avatar={images.clubs}
-              date={item.startDate}
-              price={item.price}
-              people={item.people}
-              isBookable={item.bookableNow}
-              bookingsString={item.bookings + ' of ' + item.people}
               onPress={() => console.log("View Detail")}
             />
           )}
@@ -135,14 +120,6 @@ const ClubsScreen = () => {
               onPress={() => console.log("Card Pressed")}
             />
           )} />
-      </View>
-    )
-  }
-
-  const renderMyClubs = () => {
-    return (
-      <View style={{ paddingHorizontal: 16 }}>
-
       </View>
     )
   }
@@ -186,11 +163,11 @@ const ClubsScreen = () => {
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: '#5EAA79',
+    backgroundColor: COLORS.white,
   },
   container: {
     flex: 1,
-    backgroundColor: '#5EAA79',
+    backgroundColor: COLORS.white,
   },
   title: {
     fontSize: 20,
@@ -199,45 +176,6 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     textAlign: "center"
   },
-  balanceText: {
-    fontSize: 14,
-    fontFamily: "regular",
-    color: "gray"
-  },
-  amount: {
-    fontSize: 20,
-    fontFamily: "medium",
-    color: "black",
-    marginTop: 6
-  },
-  timeSelection: {
-    width: 78,
-    height: 38,
-    flexDirection: "row",
-    borderWidth: .3,
-    borderColor: "gray",
-    borderRadius: 4,
-    alignItems: "center",
-    justifyContent: "center",
-
-  },
-  timeSelectionText: {
-    fontSize: 12,
-    fontFamily: "medium",
-    color: "gray"
-  },
-  downIcon: {
-    height: 8,
-    width: 8,
-    tintColor: "gray",
-    marginLeft: 4
-  },
-  timeSelectionContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    marginVertical: 16
-  }
+ 
 })
 export default ClubsScreen

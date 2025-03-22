@@ -5,7 +5,7 @@ import { COLORS, SIZES, icons, images } from '../constants'
 import Colors from '@/constants/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native-virtualized-view'
-//import { useNavigation } from 'expo-router'
+import { useNavigation } from 'expo-router'
 import firestore, { Timestamp } from '@react-native-firebase/firestore';
 import getMember from '../app/actions/getMember'
 
@@ -32,41 +32,30 @@ const Container: React.FC<ContainerProps> = ({ item, isSelected, onSelect }) => 
     </TouchableOpacity>
 );
 
-interface SessionCardProps {
+interface BookingCardProps {
     avatar: string;
     id: string;
     name: string;
-    location: string;
-    date: Date;
-    dateString: string;
-    sessionDate: string
-    price: number;
-    bookingsString: string;
-    bookings: number;
-    isBookable: boolean;
+    member: string;
     onPress: () => void;
 }
 
-type Booking = {
-    sessionId: string;
-    sessionDate: string;
-};
-
-const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dateString, sessionDate, price, bookings, isBookable, bookingsString, onPress }) => {
+const BookingCard: React.FC<BookingCardProps> = ({ id, name, member, onPress }) => {
     const [buttonText, setButtonText] = React.useState('Book In')
-    //const navigation = useNavigation();
-    //const { navigate } = useNavigation<Nav>()
+    const navigation = useNavigation();
+    //const [member, setMember] = React.useState({})
+    const { navigate } = useNavigation<Nav>()
 
     const bookSession = async () => {
         let member = await getMember()
+        console.log('id: ' + id)
         firestore()
             .collection('booking')
             .add({
                 member: member.uid,
                 member_name: member.first_name + ' ' + member.last_name,
-                session_id: id.split("_")[0],
-                session_name: name,
-                session_date: sessionDate
+                session_id: id,
+                session_date: date
             })
             .then(() => {
                 console.log('Booking added!');
@@ -75,7 +64,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dat
 
     // Render Send
     const renderCard = () => {
-        //console.log("price: " + price)
+        console.log("price: " + price)
         return (
             <View style={{
                 marginHorizontal: 16
@@ -152,7 +141,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dat
     }
 
     return (
-        <SafeAreaView style={isBookable ? styles.container : styles.containerNotAvailable}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.card}>
                 <Image
                     source={images.avatar1}
@@ -161,23 +150,15 @@ const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dat
                 />
                 <View style={styles.info}>
                     <Text style={styles.name}>{name}</Text>
-                    <Text style={styles.details}>{dateString}</Text>
+                    <Text style={styles.details}></Text>
                     <View style={styles.ratingContainer}>
-                        <Text style={styles.details}>{location}</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.details}>{bookings} booked on this session</Text>
+                        <Text style={styles.details}></Text>
                     </View>
                     {/*<Text style={styles.sports}>{item.sports.join(' | ')}</Text> */}
                 </View>
             </View>
             <View style={styles.card}>
-                <Text style={styles.price}>£ {price}</Text>
-                <View style={styles.info}>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText} onPress={bookSession}>Book Session</Text>
-                    </TouchableOpacity>
-                </View>
+                <Text style={styles.price}></Text>
             </View>
         </SafeAreaView>
     )
@@ -261,4 +242,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default SessionCard
+export default BookingCard
