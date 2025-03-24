@@ -26,6 +26,7 @@ type Booking = {
   id: string,
   name: string,
   member: string,
+  date: Date
 }
 
 
@@ -79,7 +80,7 @@ const SessionsScreen = () => {
       <View style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
         <FlatList
           data={sessionsAvailable}
-          //keyExtractor={(item, i) => i}
+          keyExtractor={(item, i) => i}
           renderItem={({ item }) => (
             <SessionCard
               id={item.id}
@@ -94,12 +95,42 @@ const SessionsScreen = () => {
               isBookable={item.isBookable}
               //bookingsString={item.bookings + ' of ' + item.people}
               bookingsString={"booking string"}
-              onPress={() => console.log("View Detail")}
+              onPress={bookSession}
             />
           )}
         />
       </View>
     )
+  }
+
+  async function bookSession(id, name, sessionDate) {
+    let member = await getMember()
+    firestore()
+      .collection('booking')
+      .add({
+        member: member.uid,
+        member_name: member.first_name + ' ' + member.last_name,
+        session_id: id.split("_")[0],
+        session_name: name,
+        session_date: sessionDate
+      })
+      .then(() => {
+        console.log('Booking added!');
+        let bookedSession: Booking = {}
+        bookedSession.id = id
+        bookedSession.name = name
+        bookedSession.date = sessionDate
+        bookedSession.member = member.first_name + ' ' + member.last_name
+        sessionsBooked.push(bookedSession)
+
+        removeFromAvailable(id, sessionDate)
+      });
+  }
+
+  const removeFromAvailable = (id, sessionDate) => {
+    const index = sessionsBooked.findIndex((element) => element.id == id && element.date == sessionDate)
+    console.log("index: " + index)
+    sessionsAvailable.splice(index, 1)
   }
 
   const renderScene = SceneMap({
@@ -108,9 +139,9 @@ const SessionsScreen = () => {
   });
 
   useEffect(() => {
-    getSessionsForClub()
+    //getSessionsForClub()
     bookedSessions()
-    availableSessions()   
+    availableSessions()
   }, []);
 
   /* gets member's clubs */
@@ -171,7 +202,7 @@ const SessionsScreen = () => {
       let sessionStartHours = sessionStartDate.getHours()
       let sessionStartMinutes = sessionStartDate.getMinutes()
 
-      
+
 
       let today = new Date()
       let todayPlusWindow = addHoursNewDate(today, session.window_open)
@@ -222,7 +253,7 @@ const SessionsScreen = () => {
               if (availableSession.bookings < session.capacity) {
                 availableSessions.push(availableSession)
               }
-              
+
               console.log("availableSession" + JSON.stringify(availableSession))
             } else {
               let diff = (new Date() - closeWindowDate) / (60 * 60 * 1000)
@@ -257,7 +288,7 @@ const SessionsScreen = () => {
       let bookedSession: Booking = {}
       bookedSession.id = booking.id
       bookedSession.name = booking.session_name
-      bookedSession.name = booking.session_name
+      bookedSession.date = booking.session_date
       bookedSession.member = booking.member_name
       bookings.push(bookedSession)
     });

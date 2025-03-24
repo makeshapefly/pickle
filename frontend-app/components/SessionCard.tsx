@@ -59,7 +59,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dat
 
     const bookSession = async () => {
         let member = await getMember()
-        firestore()
+        /*firestore()
             .collection('booking')
             .add({
                 member: member.uid,
@@ -70,85 +70,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dat
             })
             .then(() => {
                 console.log('Booking added!');
-            });
-    }
-
-    // Render Send
-    const renderCard = () => {
-        //console.log("price: " + price)
-        return (
-            <View style={{
-                marginHorizontal: 16
-            }}>
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    //marginVertical: 2
-                }}>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Image
-                            source={images.avatar1}
-                            contentFit='contain'
-                            style={{
-                                height: 48,
-                                width: 48,
-                                borderRadius: 999,
-                                marginRight: 10
-                            }}
-                        />
-
-                        <Text style={styles.subtitle}>{name}</Text>
-                    </View>
-                </View>
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginVertical: 12
-                }}>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <View style={{ marginLeft: 12 }}>
-                            <Text style={{
-                                fontFamily: "medium",
-                                fontSize: 14,
-                                color: COLORS.primary,
-                                marginBottom: 4
-                            }}>{dateString}</Text>
-                            <Text style={{
-                                fontFamily: "regular",
-                                fontSize: 12,
-                                color: "gray"
-                            }}>{location}</Text>
-                        </View>
-                    </View>
-
-                </View>
-
-                <View>
-                    <Text style={styles.subtitle}>{bookingsString} spaces taken</Text>
-                </View>
-
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginVertical: 12
-                }}>
-                    <Text style={{
-                        fontSize: 32,
-                        color: COLORS.primary,
-                        fontFamily: 'semiBold',
-                        marginVertical: 6
-                    }}>£{price}</Text>
-                    {isBookable &&
-                        <TouchableOpacity style={styles.btn}>
-                            <Text style={styles.btnText} onPress={bookSession}>{buttonText}</Text>
-                        </TouchableOpacity>
-                    }
-                </View>
-            </View>
-        )
+            });*/
     }
 
     return (
@@ -175,7 +97,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dat
                 <Text style={styles.price}>£ {price}</Text>
                 <View style={styles.info}>
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText} onPress={bookSession}>Book Session</Text>
+                        <Text style={styles.buttonText} onPress={() => onPress(id, name, sessionDate)}>Book Session</Text>
                     </TouchableOpacity>
                 </View>
             </View>

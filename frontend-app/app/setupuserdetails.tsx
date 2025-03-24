@@ -5,7 +5,6 @@ import PageContainer from '../components/PageContainer'
 import { COLORS, SIZES, illustrations } from '../constants'
 import { TextInput } from 'react-native'
 import Button from '../components/Button'
-import { useAuth } from '@clerk/clerk-expo'
 import { router } from 'expo-router';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
@@ -20,14 +19,11 @@ type User = {
 const Setupuserdetails = () => {
     const [firstName, setFirstName] = React.useState('')
     const [lastName, setLastName] = React.useState('')
-    const { getToken } = useAuth()
 
     async function handleSubmit(e: React.FormEvent) {
         const update = {
             displayName: firstName + ' ' + lastName,
         };
-
-        await auth().currentUser.updateProfile(update);
         router.navigate("/(tabs)")
     }
 
