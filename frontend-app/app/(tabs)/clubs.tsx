@@ -7,13 +7,12 @@ import Card from '../../components/ClubCard'
 import Header from '../../components/Header';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import ClubsCard from '@/components/ClubsCard'
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import getMember from '../actions/getMember'
+import firestore, { onSnapshot } from '@react-native-firebase/firestore';
 
 const ClubsScreen = () => {
   const [clubs, setClubs] = React.useState([])
   const [myClubs, setMyClubs] = React.useState([])
-  const [member, setMember] = React.useState(null)
   const [index, setIndex] = React.useState(0);
   const layout = useWindowDimensions();
   const [routes] = React.useState([
@@ -21,40 +20,37 @@ const ClubsScreen = () => {
     { key: 'second', title: 'Find Clubs' },
   ]);
 
-  const getMember = async () => {
-    let uid = auth().currentUser?.uid;
-    console.log(uid);
+  const retrieveMember = async () => {
+    let member = null
 
-    const querySnapshot = await firestore()
-      .collection('member')
-      .where('uid', '==', uid)
-      .get();
+    let querySnapshot = await getMember();
+    await querySnapshot
+      .get()
+      .then(querySnapshot => {
+        console.log('Total member: ', querySnapshot.size);
 
-    let member = null;
-    querySnapshot.forEach(documentSnapshot => {
-      if (documentSnapshot.data().uid === uid) {
-        member = documentSnapshot.data()
-        console.log("documentSnapshot.data().clubs: " + documentSnapshot.data().clubs)
-        setMember(member)
-      }
-    });
+        querySnapshot.forEach(documentSnapshot => {
+          member = documentSnapshot.data()
+          console.log("member: " + JSON.stringify(member));
+        });
+      });
+
     getClubs(member)
   }
 
   const getClubs = async (member) => {
     const querySnapshot = await firestore()
       .collection('club')
+      .where(firestore.FieldPath.documentId(), 'in', member?.clubs)
       .get()
 
     let clubs = [];
     let myClubs = [];
     querySnapshot.forEach(documentSnapshot => {
-      clubs.push(documentSnapshot.data())
+      //clubs.push(documentSnapshot.data())
       console.log("member?.clubs: " + member?.clubs)
       console.log("documentSnapshot.id: " + documentSnapshot.id)
-      if (member?.clubs.includes(documentSnapshot.id)) {
-        myClubs.push(documentSnapshot.data())
-      }
+      myClubs.push(documentSnapshot.data())
     });
 
     console.log(("myClubs: " + JSON.stringify(myClubs)))
@@ -63,8 +59,7 @@ const ClubsScreen = () => {
   }
 
   useEffect(() => {
-    getMember()
-    //getClubs()
+    retrieveMember()
   }, []);
 
   const first = () => {
@@ -176,6 +171,6 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     textAlign: "center"
   },
- 
+
 })
 export default ClubsScreen

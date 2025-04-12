@@ -5,8 +5,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
 import { useNavigation } from 'expo-router'
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import SubHeaderItem from '../../components/SubHeaderItem'
 import auth from '@react-native-firebase/auth';
+import getMember from '../actions/getMember'
 
 type Nav = {
   navigate: (value: string) => void
@@ -24,14 +26,27 @@ type User = {
 };
 
 const HomeScreen = () => {
-  const [userDetails, setUserDetails] = React.useState({})
+  //const [userDetails, setUserDetails] = React.useState({})
+  const [member, setMember] = React.useState()
   const { navigate } = useNavigation<Nav>();
 
+  const retrieveMember = async () => {
+    let querySnapshot = await getMember();
+    querySnapshot.onSnapshot((snapshot) => {    
+      snapshot.docChanges().forEach((change) => {
+          let member = change.doc.data()
+          console.log("member: " + JSON.stringify(member))
+          setMember(member)
+      });
+    });
+  }
+
   useEffect(() => {
+    retrieveMember()
   }, []);
 
   // Render balance card
-  const renderBalanceCard = () => {
+  const renderBookingsCard = () => {
     return (
       <View style={styles.balanceCard}>
         <View style={styles.balanceCardView}>
@@ -48,45 +63,57 @@ const HomeScreen = () => {
     )
   }
 
+  const renderMyClubs = () => {
+    return (
+      <View style={styles.balanceCard}>
+        <View style={styles.featureColumn}>
+          <View style={styles.profileLeftContainer}>
+            <View style={{ marginLeft: 16, marginTop: 5 }}>
+              <Text style={styles.name}>{member && member.clubs?.length}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
   return (
     <SafeAreaView style={styles.area}>
+      <ImageBackground source={icons.smash2} style={styles.bg}>
+        <StatusBar style="light" />
 
-      <StatusBar style="light" />
+        <View style={styles.container}>
 
-      <View style={styles.container}>
-
-        <View style={styles.profileContainer}>
-          <View style={styles.profileLeftContainer}>
-            <View style={{padding: 7, backgroundColor: COLORS.white, borderRadius: 30}}>
-              <Image
-                source={icons.athlete}
-                contentFit='contain'
-                style={styles.icon}
-              />
+          <View style={styles.profileContainer}>
+            <View style={styles.profileLeftContainer}>
+              <View>
+                <Image
+                  source={icons.athlete}
+                  contentFit='contain'
+                  style={styles.icon}
+                />
+              </View>
+              <View style={{ marginLeft: 16 }}>
+                <Text style={{ color: 'black' }}>Welcome</Text>
+                <Text style={{ color: 'black' }}>{auth().currentUser?.displayName}</Text>
+              </View>
             </View>
-            <View style={{ marginLeft: 16 }}>
-              <Text style={{ color: 'white' }}>Welcome</Text>
-              <Text style={{ color: 'white' }}>{auth().currentUser?.displayName}</Text>
+            <View style={styles.profileRightContainer}>
+              <FontAwesome6 name="message" size={24} color="black" />
             </View>
           </View>
-          <View style={styles.profileRightContainer}>
-            <Image
-              source={icons.alerts}
-              contentFit='contain'
-              style={styles.icon}
+          <View style={{ top: -40 }}>
+            <SubHeaderItem
+              title="Booked Sessions"
+              subtitle="View All"
+              onPress={() => navigate("yourcard")}
             />
           </View>
-        </View>
-        <View style={{ top: -40 }}>
-          <SubHeaderItem
-            title="Booked Sessions"
-            subtitle="View All"
-            onPress={() => navigate("yourcard")}
-          />
-        </View>
-        {renderBalanceCard()}
+          {renderBookingsCard()}
+          {renderMyClubs()}
 
-      </View>
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   )
 }//
@@ -94,7 +121,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   area: {
     //flex: 1,
-    backgroundColor: '#5EAA79',
+    //backgroundColor: '#5EAA79',
     margin: 0,
     height: "100%",
   },
@@ -234,7 +261,7 @@ const styles = StyleSheet.create({
     width: SIZES.width,
     borderRadius: 10,
     padding: 20,
-    //backgroundColor: COLORS.header,
+    //backgroundColor: COLORS.white,
     //marginHorizontal: 16,
     //marginVertical: 6,
     top: -22,
@@ -270,8 +297,13 @@ const styles = StyleSheet.create({
     right: 0
   },
   icon: {
-    width: 28,
-    height: 28,
+    width: 32,
+    height: 32,
+  },
+  smash: {
+    width: 64,
+    height: 64,
+    opacity: 0.2
   },
   bg: {
     width: '100%',

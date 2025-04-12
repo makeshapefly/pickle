@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: 'medium',
-    color: COLORS.white,
+    color: COLORS.black,
   },
   subtitle: {
     fontSize: 14,
     fontFamily: 'medium',
-    color: COLORS.white
+    color: COLORS.black
   },
 });
 

@@ -1,8 +1,7 @@
-import { View, Text, useWindowDimensions, StyleSheet, FlatList } from 'react-native'
+import { View, Text, useWindowDimensions, StyleSheet, FlatList, SafeAreaView } from 'react-native'
 import React, { useEffect } from 'react'
 import { COLORS, images } from '../../constants';
 import Header from '../../components/Header';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import SessionCard from '../../components/SessionCard'
 import BookingCard from '@/components/BookingCard';
 import auth from '@react-native-firebase/auth';
@@ -20,26 +19,25 @@ type Session = {
   //people: number,
   bookings: number,
   isBookable: boolean,
+  isAlreadyBooked: boolean,
 }
 
 type Booking = {
   id: string,
+  sessionId: string,
   name: string,
   member: string,
-  date: Date
+  memberName: string,
+  date: string //e.g. 7/3/2025
 }
 
 
-const SessionsScreen = () => {
+const SessionsCopyScreen = () => {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
-  const [sessionsAvailable, setSessionsAvailable] = React.useState({})
-  const [sessionsBooked, setSessionsBooked] = React.useState({})
-  const [routes] = React.useState([
-    { key: 'first', title: 'Available' },
-    { key: 'second', title: 'Booked' },
-  ]);
+  const [sessionsAvailable, setSessionsAvailable] = React.useState(null)
+  const [sessionsBooked, setSessionsBooked] = React.useState()
 
   let months = [
     'January',
@@ -133,16 +131,13 @@ const SessionsScreen = () => {
     sessionsAvailable.splice(index, 1)
   }
 
-  const renderScene = SceneMap({
-    first: available,
-    second: booked,
-  });
-
   useEffect(() => {
     //getSessionsForClub()
     bookedSessions()
     availableSessions()
   }, []);
+
+
 
   /* gets member's clubs */
   const getClubsForMember = async () => {
@@ -193,6 +188,7 @@ const SessionsScreen = () => {
   const availableSessions = async () => {
     const sessions = await getSessionsForClub()
     let availableSessions = []
+    let bookings = await bookedSessions()
 
     for (let i = 0; i < sessions.length; i++) {
       let session = sessions[i]
@@ -250,11 +246,17 @@ const SessionsScreen = () => {
               let numberOfBookings = await getBookingsNumberForSession(session.id, availableSession.sessionDate)
               availableSession.bookings = numberOfBookings
 
+              //check whether session is booked by this member             
+              let isBooked = bookings?.filter((item) => item.sessionId + "_" + item.date == availableSession.id)
+              if (isBooked.length > 0) {
+                availableSession.isAlreadyBooked = true
+              }
+
               if (availableSession.bookings < session.capacity) {
                 availableSessions.push(availableSession)
               }
 
-              console.log("availableSession" + JSON.stringify(availableSession))
+              //console.log("availableSession" + JSON.stringify(availableSession))
             } else {
               let diff = (new Date() - closeWindowDate) / (60 * 60 * 1000)
             }
@@ -287,14 +289,17 @@ const SessionsScreen = () => {
 
       let bookedSession: Booking = {}
       bookedSession.id = booking.id
+      bookedSession.sessionId = booking.session_id
       bookedSession.name = booking.session_name
       bookedSession.date = booking.session_date
-      bookedSession.member = booking.member_name
+      bookedSession.member = booking.member
+      bookedSession.memberName = booking.member_name
       bookings.push(bookedSession)
     });
 
-    console.log("bookings: " + JSON.stringify(bookings))
+    //console.log("bookings: " + JSON.stringify(bookings))
     setSessionsBooked(bookings)
+    return bookings
   }
 
   const getDateAsString = (date: Timestamp) => {
@@ -313,39 +318,32 @@ const SessionsScreen = () => {
     return dd + '/' + mm + '/' + yyyy
   }
 
-  const renderTabBar = (props: any) => (
-    <TabBar
-      {...props}
-      indicatorStyle={{
-        backgroundColor: COLORS.primary,
-      }}
-      style={{
-        backgroundColor: '#fff',
-      }}
-      renderLabel={({ route, focused, color }) => (
-        <Text style={[{
-          color: focused ? COLORS.primary : 'gray',
-          fontSize: 14,
-          minWidth: 100,
-          fontFamily: focused ? "medium" : "regular"
-        }]}>
-          {route.title}
-        </Text>
-      )}
-    />
-  )
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
       <Header title="Sessions" />
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{ width: layout.width }}
-        renderTabBar={renderTabBar}
-      />
-    </View>
+        <FlatList
+          data={sessionsAvailable}
+          keyExtractor={(item, i) => i}
+          renderItem={({ item }) => (
+            <SessionCard
+              id={item.id}
+              name={item.name}
+              location={item.location}
+              date={item.date}
+              sessionDate={item.sessionDate}
+              location={item.location}
+              dateString={item.dateString}
+              price={item.price}
+              bookings={item.bookings}
+              isBookable={item.isBookable}
+              //bookingsString={item.bookings + ' of ' + item.people}
+              bookingsString={"booking string"}
+              isAlreadyBooked={item.isAlreadyBooked}
+              onPress={bookSession}
+            />
+          )}
+        />
+      </SafeAreaView>
   )
 }
 
@@ -360,7 +358,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SessionsScreen
+export default SessionsCopyScreen
 
 function addHours(date: Date, hours: number) {
   const hoursToAdd = hours * 60 * 60 * 1000;
