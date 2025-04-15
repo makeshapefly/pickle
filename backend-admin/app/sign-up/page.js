@@ -1,6 +1,32 @@
+'use client'
 
 import Link from "next/link"
+import { useRouter } from 'next/navigation'
+import { Button } from "react-aria-components"
+import { useState } from "react"
+import { auth } from '@/app/firebase/firebase'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUser } from '@/app/actions/user/createUser'
+
 export default function SignUp() {
+    const router = useRouter()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+
+    const submitForm = (event) => {
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed up
+                createUser(userCredential.user, firstName, lastName)
+                router.push('/')
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    }
 
     return (
         <>
@@ -15,23 +41,27 @@ export default function SignUp() {
                             <div className="login-box">
                                 <div>
                                     <h3>Create your account</h3>
-                                    <div className="body-text">Enter your personal details to create account</div>
+                                    <div className="body-text">Enter details below to create your account</div>
                                 </div>
                                 <form className="form-login flex flex-column gap24">
                                     <fieldset className="name">
                                         <div className="body-title mb-10">Your username <span className="tf-color-1">*</span></div>
                                         <div className="flex gap10">
-                                            <input className="flex-grow" type="text" placeholder="First name" name="name" tabIndex={0} aria-required="true" required />
-                                            <input className="flex-grow" type="text" placeholder="Last name" name="name" tabIndex={0} aria-required="true" required />
+                                            <input className="flex-grow" type="text" placeholder="First name" name="name" tabIndex={0} aria-required="true" value={firstName}
+                                            onChange={(e) => setFirstName(e.target.value)} required />
+                                            <input className="flex-grow" type="text" placeholder="Last name" name="name" tabIndex={0} aria-required="true" value={lastName}
+                                            onChange={(e) => setLastName(e.target.value)} required />
                                         </div>
                                     </fieldset>
                                     <fieldset className="email">
                                         <div className="body-title mb-10">Email address <span className="tf-color-1">*</span></div>
-                                        <input className="flex-grow" type="email" placeholder="Enter your email address" name="email" tabIndex={0} aria-required="true" required />
+                                        <input className="flex-grow" type="email" placeholder="Enter your email address" name="email" tabIndex={0} aria-required="true" value={email}
+                                            onChange={(e) => setEmail(e.target.value)} required />
                                     </fieldset>
                                     <fieldset className="password">
                                         <div className="body-title mb-10">Password <span className="tf-color-1">*</span></div>
-                                        <input className="password-input" type="password" placeholder="Enter your password" name="password" tabIndex={0} aria-required="true" required />
+                                        <input className="password-input" type="password" placeholder="Enter your password" name="password" tabIndex={0} aria-required="true" value={password}
+                                            onChange={(e) => setPassword(e.target.value)} required />
                                         <span className="show-pass">
                                             <i className="icon-eye view" />
                                             <i className="icon-eye-off hide" />
@@ -51,10 +81,10 @@ export default function SignUp() {
                                             <label className="body-text" htmlFor="signed">Agree with Privacy Policy</label>
                                         </div>
                                     </div>
-                                    <Link href="/login" className="tf-button w-full">Login</Link>
+                                    <Button onClick={(event) => submitForm()} className="tf-button w-full">Login</Button>
                                 </form>
                                 <div>
-                                    <div className="text-tiny mb-16 text-center">Or continue with social account</div>
+                                    <div className="text-tiny mb-16 text-center">Or continue with social login</div>
                                     <div className="flex gap16 mobile-wrap">
                                         <Link href="/" className="tf-button style-2 w-full">
                                             <svg xmlns="http://www.w3.org/2000/svg" width={23} height={22} viewBox="0 0 23 22" fill="none">
@@ -96,7 +126,6 @@ export default function SignUp() {
                                 </div>
                             </div>
                         </div>
-                        <div className="text-tiny">Copyright © 2024 Remos, All rights reserved.</div>
                     </div>
                 </div>
                 {/* /#page */}

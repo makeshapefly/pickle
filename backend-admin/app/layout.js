@@ -7,6 +7,7 @@ import "/public/css/swiper-bundle.min.css"
 import "/public/css/style.css"
 import "/public/font/fonts.css"
 import "/public/icon/style.css"
+import { AuthProvider } from "@/app/auth/AuthUserContext"
 
 const nunito = Nunito({
     weight: ['300', '400', '500', '600', '700'],
@@ -23,7 +24,7 @@ export default async function RootLayout({ children }) {
 
     return (
             <html lang="en">
-                <body className={`${nunito.variable} body`}>{children}</body>
+                <body className={`${nunito.variable} body`}><AuthProvider>{children}</AuthProvider></body>
             </html>
     )
 }

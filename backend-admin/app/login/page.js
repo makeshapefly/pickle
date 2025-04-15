@@ -1,6 +1,27 @@
+'use client'
 
+import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from 'next/navigation'
+import { Button } from "react-aria-components"
+import { auth } from '@/app/firebase/firebase'
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from '@/app/auth/AuthUserContext'
+
 export default function Login() {
+    const router = useRouter()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const signin = () => {
+        signInWithEmailAndPassword(auth, email, password)
+            .then(async authUser => {
+                router.push('/');
+            })
+            .catch(error => {
+                //setError(error.message)
+            });
+    }
 
     return (
         <>
@@ -14,17 +35,19 @@ export default function Login() {
                             </Link>
                             <div className="login-box">
                                 <div>
-                                    <h3>Login to account</h3>
+                                    <h3>Login</h3>
                                     <div className="body-text">Enter your email &amp; password to login</div>
                                 </div>
                                 <form className="form-login flex flex-column gap24">
                                     <fieldset className="email">
                                         <div className="body-title mb-10">Email address <span className="tf-color-1">*</span></div>
-                                        <input className="flex-grow" type="email" placeholder="Enter your email address" name="email" tabIndex={0} aria-required="true" required />
+                                        <input className="flex-grow" type="email" placeholder="Enter your email address" name="email" tabIndex={0} aria-required="true" value={email}
+                                            onChange={(e) => setEmail(e.target.value)} required />
                                     </fieldset>
                                     <fieldset className="password">
                                         <div className="body-title mb-10">Password <span className="tf-color-1">*</span></div>
-                                        <input className="password-input" type="password" placeholder="Enter your password" name="password" tabIndex={0} aria-required="true" required />
+                                        <input className="password-input" type="password" placeholder="Enter your password" name="password" tabIndex={0} aria-required="true" value={password}
+                                            onChange={(e) => setPassword(e.target.value)} required />
                                         <span className="show-pass">
                                             <i className="icon-eye view" />
                                             <i className="icon-eye-off hide" />
@@ -37,7 +60,7 @@ export default function Login() {
                                         </div>
                                         <Link href="#" className="body-text tf-color">Forgot password?</Link>
                                     </div>
-                                    <Link href="/" className="tf-button w-full">Login</Link>
+                                    <Button onPress={() => signin()} className="tf-button w-full">Login</Button>
                                 </form>
                                 <div>
                                     <div className="text-tiny mb-16 text-center">Or continue with social account</div>
@@ -77,12 +100,11 @@ export default function Login() {
                                     </div>
                                 </div>
                                 <div className="body-text text-center">
-                                    You don't have an account yet?
-                                    <Link href="/sign-up" className="body-text tf-color">Register Now</Link>
+                                    Don't have an account?
+                                    <Link href="/sign-up" className="body-text tf-color"> Register Now</Link>
                                 </div>
                             </div>
                         </div>
-                        <div className="text-tiny">Copyright © 2024 Remos, All rights reserved.</div>
                     </div>
                 </div>
                 {/* /#page */}

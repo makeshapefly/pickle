@@ -1,16 +1,20 @@
+'use client'
 
 import Layout from '@/components/layout/Layout'
 import Link from "next/link"
 import { getAllUsersByOrg, searchUsers } from '@/app/db/UserRepository'
-import GetUser from "@/components/user/GetUser"
 import { db } from "@/lib/database/db";
 import { UserDelete } from '@/components/buttons/UserDelete'
 import UserSearch from '@/components/user/UserSearch'
 import Pagination from '@/components/user/Pagination';
 
+import { useAuth } from '@/app/auth/AuthUserContext'
+
 export default async function AllUser(props) {
 
-    const webUser = await GetUser()
+    const { webUser } = useAuth();
+
+    //const webUser = await GetUser()
 
     const searchParams = await props.searchParams;
     const query = searchParams?.query || '';

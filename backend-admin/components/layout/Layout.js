@@ -19,7 +19,6 @@ import Footer1 from './Footer1'
 import Header1 from "./Header1"
 import Offcanvas from "./Offcanvas"
 import Sidebar from './Sidebar'
-import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
 export default function Layout({ headerStyle, breadcrumbTitleParent, breadcrumbTitle, children, boxed, menuIconHover, menuIconDefault, user }) {
     // Moblile Menu
@@ -44,7 +43,6 @@ export default function Layout({ headerStyle, breadcrumbTitleParent, breadcrumbT
             <ThemeBackground />
             <MenuBackground />
             <ClearButton2 />
-            <ClerkProvider>
                 <div id="wrapper">
                     <div id="page">
                         <div className={`layout-wrap 
@@ -71,7 +69,6 @@ export default function Layout({ headerStyle, breadcrumbTitleParent, breadcrumbT
                     </div>
                     <Offcanvas isOffcanvas={isOffcanvas} handleOffcanvas={handleOffcanvas} />
                 </div>
-            </ClerkProvider>
         </>
     )
 }
