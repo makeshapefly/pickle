@@ -1,9 +1,11 @@
+'use client'
+
 import Layout from '@/components/layout/Layout'
-import GetUser from "@/components/user/GetUser"
 import AddSessionForm from '@/components/session/AddSessionForm'
+import { useAuth } from '@/app/auth/AuthUserContext'
 
 export default async function CreateSession() {
-    const webUser = await GetUser()
+    const { webUser } = useAuth()
 
     return (
         <>

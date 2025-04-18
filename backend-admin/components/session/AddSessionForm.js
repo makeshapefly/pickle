@@ -1,12 +1,14 @@
 "use client"
 
 import React, { useState } from 'react';
+import { db } from '@/app/firebase/firebase'
 import { useFormik } from "formik";
-import { addSession } from "@/app/actions/addSession";
+//import { addSession } from "@/app/actions/addSession";
 import * as Yup from "yup";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TextError from "@/components/user/TextError"
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 
 // Yup schema to validate the form
 const schema = (isTab2) =>
@@ -44,7 +46,41 @@ const schema = (isTab2) =>
         endTime: Yup.string().required("Please enter an end time")
     });
 
+const prepareSession = (startDate, windowOpen, windowClose, days) => {
+    let startDateMinusWindow = new Date(startDate.getTime());
+    let startDateMinusWindowClose = new Date(startDate.getTime());
+    startDateMinusWindow.setDate(startDateMinusWindow.getDate() - windowOpen)
+    startDateMinusWindowClose.setHours(startDateMinusWindowClose.getHours() - windowClose)
 
+    const daysMap = new Map([
+        [0, "sunday"],
+        [1, "monday"],
+        [2, "tuesday"],
+        [3, "wednesday"],
+        [4, "thursday"],
+        [5, "friday"],
+        [6, "saturday"],
+    ]);
+
+    let today = new Date()
+    //console.log("daysMap.get(startDate.getDay()): " + daysMap.get(startDate.getDay()))
+    //console.log("dadays.includes(daysMap.get(startDate.getDay())): " + days.includes(daysMap.get(startDate.getDay())))
+    let available = []
+    if (today < startDateMinusWindow) {
+        let obj = {}
+        obj.session = Timestamp.fromDate(startDate)
+        obj.opens = Timestamp.fromDate(startDateMinusWindow)
+        obj.closes = Timestamp.fromDate(startDateMinusWindowClose)
+        obj.is_correct_day_of_week = days.includes(daysMap.get(startDate.getDay())) ? true : false
+        obj.bookings = []
+        available.push(obj)
+    } else {
+
+
+    }
+
+    return available
+}
 
 const AddSessionForm = ({ user }) => {
     const [isTab2, setIsTab2] = useState(1)
@@ -92,32 +128,31 @@ const AddSessionForm = ({ user }) => {
 
 
             try {
-                let json = {}
-                json.name = values.name
-                json.location = values.location
-                json.recurring = isTab2 == 1 ? true : false
-                json.startDate = startDate
-                json.endDate = endDate
-                json.startTime = values.startTime
-                json.endTime = values.endTime
-                json.sessionDate = values.sessionDate
-                json.days = values.days
-                json.price = values.price
-                json.people = values.people
-                json.active = values.active
-                json.organisationId = user.organisation
+                const available = prepareSession(startDate, values.window, values.windowClose, values.days)
+                //json.available = available
 
-                let config = {}
-                config.window = values.window
-                config.windowClose = values.windowClose
-                config.payment = values.payment
-                config.paymentRequired = values.paymentRequired
+                const docRef = await addDoc(collection(db, "session"), {
+                    name: values.name,
+                    location: values.location,
+                    recurring: isTab2 == 1 ? true : false,
+                    start_date: startDate,
+                    end_date: endDate,
+                    start_time: values.startTime,
+                    end_time: values.endTime,
+                    session_date: values.sessionDate,
+                    days: values.days,
+                    price: values.price,
+                    people: values.people,
+                    active: values.active,
+                    //organisationId: user.club,
+                    club: 2,
+                    window_open: values.window,
+                    window_close: values.windowClose,
+                    payment: values.payment,
+                    payment_required: values.paymentRequired,
+                    available: available
+                });
 
-                json.config = JSON.stringify(config)
-
-                console.log(JSON.stringify(json))
-
-                const result = await addSession(user, json)
                 formik.resetForm()
                 showToastMessage()
             } catch (error) {
@@ -447,9 +482,9 @@ const AddSessionForm = ({ user }) => {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-xl-6 col-sm-6 col-6 mb-20">                      
+                        <div className="col-xl-6 col-sm-6 col-6 mb-20">
                             <div className="right flex-grow">
-                            <div className="body-title mb-20">Open the Session for booking X days in advance.</div>
+                                <div className="body-title mb-20">Open the Session for booking X days in advance.</div>
                                 <fieldset>
                                     <input type="number" onChange={handleChange} name="window" id="window" value={values.window} tabIndex={0} style={{ fontSize: '2rem', width: '100%' }} />
                                 </fieldset>
@@ -462,7 +497,7 @@ const AddSessionForm = ({ user }) => {
                         </div>
                         <div className="col-xl-6 col-sm-6 col-6 mb-20">
                             <div className="right flex-grow">
-                            <div className="body-title mb-20">Close the Session for booking X hours in advance.</div>
+                                <div className="body-title mb-20">Close the Session for booking X hours in advance.</div>
                                 <fieldset>
                                     <input type="number" onChange={handleChange} name="windowClose" id="windowClose" value={values.windowClose} tabIndex={0} style={{ fontSize: '2rem', width: '100%' }} />
                                 </fieldset>

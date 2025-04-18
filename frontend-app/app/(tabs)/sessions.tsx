@@ -133,7 +133,7 @@ const SessionsCopyScreen = () => {
 
   useEffect(() => {
     //getSessionsForClub()
-    bookedSessions()
+    //bookedSessions()
     availableSessions()
   }, []);
 
@@ -186,6 +186,15 @@ const SessionsCopyScreen = () => {
   }
 
   const availableSessions = async () => {
+    const sessions = await getSessionsForClub()
+    let availableSessions = []
+    
+    for (let i = 0; i < sessions.length; i++) {
+      let session = sessions[i]
+    }
+  }
+
+  /*const availableSessions = async () => {
     const sessions = await getSessionsForClub()
     let availableSessions = []
     let bookings = await bookedSessions()
@@ -273,7 +282,7 @@ const SessionsCopyScreen = () => {
       }
     }
     setSessionsAvailable(availableSessions)
-  }
+  } */
 
   const bookedSessions = async () => {
     let uid = auth().currentUser?.uid;

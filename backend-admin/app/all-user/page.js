@@ -9,14 +9,17 @@ import UserSearch from '@/components/user/UserSearch'
 import Pagination from '@/components/user/Pagination';
 
 import { useAuth } from '@/app/auth/AuthUserContext'
+import { getAllUsers } from '@/app/actions/user/getAllUsers'
 
 export default async function AllUser(props) {
 
     const { webUser } = useAuth();
+    let users = await getAllUsers("noxB4VFhbeOd8xOAjhr1")
+    console.log(users)
 
     //const webUser = await GetUser()
 
-    const searchParams = await props.searchParams;
+    /*const searchParams = await props.searchParams;
     const query = searchParams?.query || '';
     const page = searchParams?.page || '';
 
@@ -30,7 +33,7 @@ export default async function AllUser(props) {
         users = await getAllUsersByOrg(db, webUser.organisation, webUser.email, itemsPerPage, Number(page))
     }
 
-    let totalUsers = await searchUsers(db, webUser.organisation, query, webUser.email, 2000000000, 0)
+    let totalUsers = await searchUsers(db, webUser.organisation, query, webUser.email, 2000000000, 0) */
 
     return (
         <>
@@ -42,19 +45,8 @@ export default async function AllUser(props) {
                         <Link className="tf-button style-1 w208" href="/add-new-user"><i className="icon-plus" />Add new</Link>
                     </div>
                     <div className="wg-table table-all-attribute">
-                        <ul className="table-title flex gap20 mb-14">
-                            <li>
-                                <div className="body-title">Name</div>
-                            </li>
-                            <li>
-                                <div className="body-title">Email</div>
-                            </li>
-                            <li>
-                                <div className="body-title">Action</div>
-                            </li>
-                        </ul>
                         <ul className="flex flex-column">
-                            {users.map(function (user, i) {
+                            {users && users.map(function (user, i) {
                                 return (
                                     <li className="attribute-item flex items-center justify-between gap20">
                                         <div className="name">
@@ -77,10 +69,11 @@ export default async function AllUser(props) {
                                 )
                             })}
                         </ul>
+
                     </div>
                     <div className="divider" />
-                        <Pagination users={totalUsers.length} itemsPerPage={itemsPerPage} />
-                    </div>
+                    {/* <Pagination users={totalUsers.length} itemsPerPage={itemsPerPage} /> */}
+                </div>
             </Layout>
         </>
     )
