@@ -54,7 +54,7 @@ type Booking = {
     sessionDate: string;
 };
 
-const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dateString, sessionDate, price, bookings, isBookable, bookingsString, isAlreadyBooked, onPress }) => {
+const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dateString, sessionDate, price, bookings, isBookable, bookingsString, isAlreadyBooked, numberOfBookings, onPress }) => {
     const [buttonText, setButtonText] = React.useState('Book In')
     //const navigation = useNavigation();
     //const { navigate } = useNavigation<Nav>()
@@ -89,9 +89,9 @@ const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dat
             </View>
             <View>
                 <Text style={styles.date}>{dateString}</Text>
+                <Text style={styles.date}>No of bookings: {numberOfBookings}</Text>
                 <View style={styles.ratingContainer}>
                     <Ionicons name="location-outline" size={24} color="black" />
-                    <Text style={styles.location}>{location}</Text>
                 </View>
                 <View>
                     <Text style={styles.details}>{bookings} booked on this session</Text>
@@ -103,7 +103,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ id, name, location, date, dat
                 <Text style={styles.price}>£ {price}</Text>
                 <View style={styles.info}>
                     <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText} onPress={() => onPress(id, name, sessionDate)}>Book Session</Text>
+                        <Text style={styles.buttonText} onPress={() => onPress(id, sessionDate)}>Book Session</Text>
                     </TouchableOpacity>
                 </View>
             </View>

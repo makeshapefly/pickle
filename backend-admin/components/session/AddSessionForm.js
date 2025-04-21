@@ -72,7 +72,6 @@ const prepareSession = (startDate, windowOpen, windowClose, days) => {
         obj.opens = Timestamp.fromDate(startDateMinusWindow)
         obj.closes = Timestamp.fromDate(startDateMinusWindowClose)
         obj.is_correct_day_of_week = days.includes(daysMap.get(startDate.getDay())) ? true : false
-        obj.bookings = []
         available.push(obj)
     } else {
 

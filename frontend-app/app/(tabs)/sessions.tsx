@@ -1,11 +1,11 @@
-import { View, Text, useWindowDimensions, StyleSheet, FlatList, SafeAreaView } from 'react-native'
+import { View, useWindowDimensions, StyleSheet, FlatList, SafeAreaView } from 'react-native'
 import React, { useEffect } from 'react'
-import { COLORS, images } from '../../constants';
+import { COLORS } from '../../constants';
 import Header from '../../components/Header';
 import SessionCard from '../../components/SessionCard'
 import BookingCard from '@/components/BookingCard';
 import auth from '@react-native-firebase/auth';
-import firestore, { Filter, Timestamp } from '@react-native-firebase/firestore';
+import firestore, { Filter, Timestamp, FieldValue, arrayUnion } from '@react-native-firebase/firestore';
 
 type Session = {
   id: string,
@@ -72,57 +72,28 @@ const SessionsCopyScreen = () => {
     )
   }
 
+  async function bookSession(id, sessionDate) {
+    let member = auth().currentUser
+    let booking = {
+      date: sessionDate,
+      uid: member?.uid,
+      name: member?.displayName,
+    }
 
-  const available = () => {
-    return (
-      <View style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
-        <FlatList
-          data={sessionsAvailable}
-          keyExtractor={(item, i) => i}
-          renderItem={({ item }) => (
-            <SessionCard
-              id={item.id}
-              name={item.name}
-              location={item.location}
-              date={item.date}
-              sessionDate={item.sessionDate}
-              location={item.location}
-              dateString={item.dateString}
-              price={item.price}
-              bookings={item.bookings}
-              isBookable={item.isBookable}
-              //bookingsString={item.bookings + ' of ' + item.people}
-              bookingsString={"booking string"}
-              onPress={bookSession}
-            />
-          )}
-        />
-      </View>
-    )
-  }
-
-  async function bookSession(id, name, sessionDate) {
-    let member = await getMember()
-    firestore()
-      .collection('booking')
-      .add({
-        member: member.uid,
-        member_name: member.first_name + ' ' + member.last_name,
-        session_id: id.split("_")[0],
-        session_name: name,
-        session_date: sessionDate
-      })
-      .then(() => {
-        console.log('Booking added!');
-        let bookedSession: Booking = {}
-        bookedSession.id = id
-        bookedSession.name = name
-        bookedSession.date = sessionDate
-        bookedSession.member = member.first_name + ' ' + member.last_name
-        sessionsBooked.push(bookedSession)
-
-        removeFromAvailable(id, sessionDate)
-      });
+    try {
+      console.log(booking)
+      firestore()
+        .collection('session')
+        .doc(id)
+        .update({
+          bookings: FieldValue.arrayUnion(booking),
+        })
+        .then(() => {
+          console.log('Session updated!');
+        });
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const removeFromAvailable = (id, sessionDate) => {
@@ -154,25 +125,25 @@ const SessionsCopyScreen = () => {
   }
 
   /* get bookings size for a particular session */
-  const getBookingsNumberForSession = async (sessionId: string, sessionDate: string) => {
-    const querySnapshot = await firestore()
-      .collection('booking')
-      .where(Filter.and(Filter('session_date', '==', sessionDate), Filter('session_id', '==', sessionId)))
-      .get()
+  const getBookingsNumberForSession = (sessionDate: Timestamp, bookings: Array<object>) => {
+    let number = bookings.filter((element) => element.date.isEqual(sessionDate))
+    return number.length
+  }
 
-    querySnapshot.forEach(documentSnapshot => {
-
-    });
-    console.log("size: " + querySnapshot.size)
-    return querySnapshot.size
+  const getBookedSessions = (bookings: Array<object>) => {
+    let member = auth().currentUser
+    let myBookings = bookings.filter((element) => element.uid == member?.uid)
+    console.log('myBookings3: ' + myBookings)
+    return myBookings
   }
 
 
   const getSessionsForClub = async () => {
     const clubs = await getClubsForMember()
+
     const querySnapshot = await firestore()
       .collection('session')
-      .where('organisation', 'in', clubs)
+      .where('club', 'in', clubs)
       .get()
 
     let sessions = []
@@ -187,102 +158,45 @@ const SessionsCopyScreen = () => {
 
   const availableSessions = async () => {
     const sessions = await getSessionsForClub()
-    let availableSessions = []
-    
-    for (let i = 0; i < sessions.length; i++) {
-      let session = sessions[i]
-    }
-  }
-
-  /*const availableSessions = async () => {
-    const sessions = await getSessionsForClub()
-    let availableSessions = []
-    let bookings = await bookedSessions()
+    let availableSessionsList = []
 
     for (let i = 0; i < sessions.length; i++) {
       let session = sessions[i]
-      let sessionStartDate = session.start_date.toDate();
-      console.log("sessionStartDate: " + sessionStartDate)
-      let sessionEndDate = session.end_date.toDate();
-      let sessionStartHours = sessionStartDate.getHours()
-      let sessionStartMinutes = sessionStartDate.getMinutes()
-
-
-
+      const bookings = session.bookings
+      const available = session.available
       let today = new Date()
-      let todayPlusWindow = addHoursNewDate(today, session.window_open)
-      const days = new Map([
-        [0, "Sunday"],
-        [1, "Monday"],
-        [2, "Tuesday"],
-        [3, "Wednesday"],
-        [4, "Thursday"],
-        [5, "Friday"],
-        [6, "Saturday"],
-      ]);
+      available.forEach(element => {
+        const opens = (element.opens).toDate()
+        const closes = (element.closes).toDate()
+        const sessionDate = (element.session).toDate()
+        const isDayOfWeek = element.is_correct_day_of_week
+        console.log(closes)
+        console.log(sessionDate)
+        if (today > opens && today < closes && isDayOfWeek) {
+          console.log("adding available session")
+          let numberOfBookings = getBookingsNumberForSession(element.session, bookings)
+          console.log("numberOfBookings: " + numberOfBookings)
 
-      let sessionSlot = new Date() //the date of a potential session > add 24 hours in loop
+          const myBookings = getBookedSessions(bookings)
+          console.log(myBookings)
 
-      //populate to today + windowOpen  OR   session end date, whichever is sooner
-      let populateToDate = null
-      populateToDate = addHours(new Date(), session.window_open)
-      if (populateToDate > sessionEndDate) {
-        populateToDate = addHoursNewDate(sessionEndDate, 0)
-      }
-
-      while (sessionSlot < populateToDate) {
-        sessionSlot.setHours(sessionStartHours)
-        sessionSlot.setMinutes(sessionStartMinutes)
-
-        let closeWindowDate = minusHoursNewDate(sessionSlot, session.window_close)
-
-        if (session.days.includes(days.get(sessionSlot.getDay()))) {
-          if (todayPlusWindow >= sessionSlot) {
-            if (new Date() < closeWindowDate) {
-              //session is available
-              //console.log("avaialable: " + JSON.stringify(sessionSlot))
-              //console.log(days.get(sessionSlot.getDay()) + ' ' + getDateAsString(sessionSlot))
-              let availableSession: Session = {}
-              availableSession.id = session.id + '_' + getDateAsStringMinimal(sessionSlot)
-              availableSession.name = session.name
-              availableSession.location = session.location
-              availableSession.isBookable = true
-              availableSession.price = session.price
-              availableSession.date = addHoursNewDate(sessionSlot, 0)
-              availableSession.dateString = days.get(sessionSlot.getDay()) + ' ' + getDateAsString(sessionSlot) + " - " + sessionEndDate.getHours() + ":" + sessionEndDate.getMinutes()
-              availableSession.sessionDate = getDateAsStringMinimal(sessionSlot)
-
-              let numberOfBookings = await getBookingsNumberForSession(session.id, availableSession.sessionDate)
-              availableSession.bookings = numberOfBookings
-
-              //check whether session is booked by this member             
-              let isBooked = bookings?.filter((item) => item.sessionId + "_" + item.date == availableSession.id)
-              if (isBooked.length > 0) {
-                availableSession.isAlreadyBooked = true
-              }
-
-              if (availableSession.bookings < session.capacity) {
-                availableSessions.push(availableSession)
-              }
-
-              //console.log("availableSession" + JSON.stringify(availableSession))
-            } else {
-              let diff = (new Date() - closeWindowDate) / (60 * 60 * 1000)
-            }
-          }
-          //don't think this condition will ever be met
-          if (todayPlusWindow < sessionSlot) {
-            //console.log("not avaialable: " + JSON.stringify(sessionSlot))
-            //let difference = sessionSlot - todayPlusWindow
-            //console.log("difference: " + difference)
-          }
+          let availableSession: any = {}
+          availableSession.id = session.id
+          availableSession.name = session.name
+          availableSession.location = session.location
+          availableSession.isBookable = true
+          availableSession.price = session.price
+          availableSession.date = element.sessionDate
+          availableSession.dateString = getDateAsStringMinimal(sessionDate)
+          availableSession.sessionDate = element.session
+          availableSession.numberOfBookings = numberOfBookings
+          availableSessionsList.push(availableSession)
         }
+      });
 
-        sessionSlot = addHours(sessionSlot, 24)
-      }
     }
-    setSessionsAvailable(availableSessions)
-  } */
+    setSessionsAvailable(availableSessionsList)
+  }
 
   const bookedSessions = async () => {
     let uid = auth().currentUser?.uid;
@@ -321,7 +235,7 @@ const SessionsCopyScreen = () => {
   }
 
   const getDateAsStringMinimal = (date: Timestamp) => {
-    let mm = date.getMonth();
+    let mm = date.getMonth() + 1;
     let dd = date.getDate();
     let yyyy = date.getFullYear();
     return dd + '/' + mm + '/' + yyyy
@@ -330,29 +244,29 @@ const SessionsCopyScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.secondaryWhite }}>
       <Header title="Sessions" />
-        <FlatList
-          data={sessionsAvailable}
-          keyExtractor={(item, i) => i}
-          renderItem={({ item }) => (
-            <SessionCard
-              id={item.id}
-              name={item.name}
-              location={item.location}
-              date={item.date}
-              sessionDate={item.sessionDate}
-              location={item.location}
-              dateString={item.dateString}
-              price={item.price}
-              bookings={item.bookings}
-              isBookable={item.isBookable}
-              //bookingsString={item.bookings + ' of ' + item.people}
-              bookingsString={"booking string"}
-              isAlreadyBooked={item.isAlreadyBooked}
-              onPress={bookSession}
-            />
-          )}
-        />
-      </SafeAreaView>
+      <FlatList
+        data={sessionsAvailable}
+        keyExtractor={(item, i) => i}
+        renderItem={({ item }) => (
+          <SessionCard
+            id={item.id}
+            name={item.name}
+            location={item.location}
+            date={item.date}
+            sessionDate={item.sessionDate}
+            dateString={item.dateString}
+            price={item.price}
+            bookings={item.bookings}
+            isBookable={item.isBookable}
+            //bookingsString={item.bookings + ' of ' + item.people}
+            bookingsString={"booking string"}
+            isAlreadyBooked={item.isAlreadyBooked}
+            numberOfBookings={item.numberOfBookings}
+            onPress={bookSession}
+          />
+        )}
+      />
+    </SafeAreaView>
   )
 }
 
@@ -369,28 +283,3 @@ const styles = StyleSheet.create({
 
 export default SessionsCopyScreen
 
-function addHours(date: Date, hours: number) {
-  const hoursToAdd = hours * 60 * 60 * 1000;
-  date.setTime(date.getTime() + hoursToAdd);
-  return date;
-}
-
-function minusHours(date, hours) {
-  const hoursToSubtract = hours * 60 * 60 * 1000;
-  date.setTime(date.getTime() - hoursToSubtract);
-  return date;
-}
-
-function addHoursNewDate(date, hours) {
-  const hoursToAdd = hours * 60 * 60 * 1000;
-  let returnDate = new Date()
-  returnDate.setTime(date.getTime() + hoursToAdd)
-  return returnDate
-}
-
-function minusHoursNewDate(date, hours) {
-  const hoursToSubtract = hours * 60 * 60 * 1000;
-  let returnDate = new Date()
-  returnDate.setTime(date.getTime() - hoursToSubtract)
-  return returnDate
-}
