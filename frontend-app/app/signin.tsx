@@ -66,9 +66,7 @@ const Signin = () => {
 
   // Handle the button press
   async function signInWithPhoneNumber() {
-    console.log(phone)
     const confirmation = await auth().signInWithPhoneNumber('+44' + phone);
-    console.log("confirmation: " + confirmation)
     setConfirm(confirmation);
   }
 

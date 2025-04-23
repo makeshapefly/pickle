@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Pickle",
+    "slug": "pickle-app",
+    "version": "1.1.2",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/41995aa6-03ac-4d7b-bdae-4fe454ed9ee6"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.greenbyte.pickleapp",
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "package": "com.greenbyte.pickleapp"
+    },
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/images/icon.png",
+      "backgroundColor": "#FFFFFF"
+    },
+    "package": "com.brightteam.CarenForFamily"
+  },
+  "web": {
+    "favicon": "./assets/images/icon.png"
+  },
+  "extra": {
+    "eas": {
+      "projectId": "41995aa6-03ac-4d7b-bdae-4fe454ed9ee6"
+    }
+  },
+  "runtimeVersion": {
+    "policy": "appVersion"
+  }
+}

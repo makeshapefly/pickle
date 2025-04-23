@@ -1,0 +1,38 @@
+diff --git a/node_modules/react-native-reanimated-carousel/src/layouts/parallax.ts b/node_modules/react-native-reanimated-carousel/src/layouts/parallax.ts
+index 2f8246f..6411d1c 100644
+--- a/node_modules/react-native-reanimated-carousel/src/layouts/parallax.ts
++++ b/node_modules/react-native-reanimated-carousel/src/layouts/parallax.ts
+@@ -1,4 +1,4 @@
+-import { Extrapolate, interpolate } from "react-native-reanimated";
++import { Extrapolation, interpolate } from "react-native-reanimated";
+ 
+ import type { IComputedDirectionTypes } from "../types";
+ 
+@@ -52,14 +52,9 @@ export function parallaxLayout(
+       [-size + parallaxScrollingOffset, 0, size - parallaxScrollingOffset],
+     );
+ 
+-    const zIndex = interpolate(
+-      value,
+-      [-1, 0, 1],
+-      [0, size, 0],
+-      Extrapolate.CLAMP,
+-    );
++    const zIndex = Math.round(interpolate(value, [-1, 0, 1], [0, size, 0]))
+ 
+-    const scale = interpolate(
++    const scale = Math.round(interpolate(
+       value,
+       [-1, 0, 1],
+       [
+@@ -67,8 +62,8 @@ export function parallaxLayout(
+         parallaxScrollingScale,
+         parallaxAdjacentItemScale,
+       ],
+-      Extrapolate.CLAMP,
+-    );
++      Extrapolation.CLAMP,
++    ));
+ 
+     return {
+       transform: [
