@@ -17,6 +17,7 @@ import ThemeContext from "./ThemeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppContainer from "navigation/AppContainer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { MemberProvider } from 'MemberContext';
 LogBox.ignoreLogs([
   "AsyncStorage has been extracted from react-native core and will be removed in a future release. It can now be installed and imported from '@react-native-async-storage/async-storage' instead of 'react-native'. See https://github.com/react-native-async-storage/async-storage",
 ]);
@@ -36,26 +37,28 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <ThemeContext.Provider value={{ theme, toggleTheme }}>
-            <IconRegistry icons={[EvaIconsPack, AssetIconsPack]} />
-            <ApplicationProvider
-              {...eva}
-              theme={
-                theme === "light"
-                  ? { ...eva.light, ...customTheme, ...lightTheme }
-                  : { ...eva.dark, ...customTheme, ...darkTheme }
-              }
-              /* @ts-ignore */
-              customMapping={customMapping}
-            >
-              <SafeAreaProvider>
-                <StatusBar
-                  style={theme === "light" ? "dark" : "light"}
-                  translucent={true}
-                  backgroundColor={"#00000000"}
-                />
-                <AppContainer />
-              </SafeAreaProvider>
-            </ApplicationProvider>
+            <MemberProvider>
+              <IconRegistry icons={[EvaIconsPack, AssetIconsPack]} />
+              <ApplicationProvider
+                {...eva}
+                theme={
+                  theme === "light"
+                    ? { ...eva.light, ...customTheme, ...lightTheme }
+                    : { ...eva.dark, ...customTheme, ...darkTheme }
+                }
+                /* @ts-ignore */
+                customMapping={customMapping}
+              >
+                <SafeAreaProvider>
+                  <StatusBar
+                    style={theme === "light" ? "dark" : "light"}
+                    translucent={true}
+                    backgroundColor={"#00000000"}
+                  />
+                  <AppContainer />
+                </SafeAreaProvider>
+              </ApplicationProvider>
+            </MemberProvider>
           </ThemeContext.Provider>
         </SafeAreaProvider>
       </GestureHandlerRootView>

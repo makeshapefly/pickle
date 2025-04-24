@@ -22,12 +22,17 @@ import TitleField from 'components/TitleField';
 import auth from '@react-native-firebase/auth';
 import IRecommended from 'components/IRecommended';
 import Flex from 'components/Flex';
+import { useMember } from 'MemberContext';
 
 const HomeSrc = memo(() => {
   const {navigate} = useNavigation<NavigationProp<HomeStackParamList>>();
   const styles = useStyleSheet(themedStyles);
   const {t} = useTranslation(['home', 'common']);
   const [isFirstTime, setFirst] = React.useState(true);
+
+  const { member } = useMember();
+
+  console.log("home screen: " + JSON.stringify(member))
 
   return (
     <Container style={styles.container}>

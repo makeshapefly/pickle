@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect } from 'react';
 import { View, Image, TouchableOpacity, TextInput } from 'react-native';
 import { OtpInput } from "react-native-otp-entry";
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import {
   StyleService,
@@ -27,13 +28,16 @@ import { RuleEmail, RulePassword } from 'utils/rules';
 import useToggle from 'hooks/useToggle';
 import Flex from 'components/Flex';
 import { RootStackParamList } from 'navigation/types';
-import useAuth from 'hooks/useAuth';
+import { useMember } from 'MemberContext';
 import { globalStyle } from 'styles/globalStyle';
 
 const Login = memo(() => {
   const [phone, setPhone] = React.useState('')
   const [code, setCode] = React.useState('')
+  const [firstName, setFirstName] = React.useState('')
+  const [lastName, setLastName] = React.useState('')
   const [confirm, setConfirm] = useState(null);
+  const [isNewUser, setIsNewUser] = useState(false);
   const [otp, setOtp] = useState('');
 
   const { navigate, dispatch } =
@@ -42,7 +46,8 @@ const Login = memo(() => {
   const styles = useStyleSheet(themedStyles);
   const { t } = useTranslation(['auth', 'common']);
 
-  const { signIn } = useAuth();
+  const { member, addMember } = useMember();
+  
   const nextScreen = React.useCallback((screenName: string) => {
     const resetAction = CommonActions.reset({
       index: 1,
@@ -99,9 +104,11 @@ const Login = memo(() => {
       console.log("the user: " + JSON.stringify(user))
       if (user?.displayName == null || user?.displayName == '') {
         //router.push('/setupuserdetails')
+        //newUser(user)
+        setIsNewUser(true)
       } else {
-        //getMember()
-        //router.push('/(tabs)')
+        getMember()
+        navigate('MainBottomTab')
       }
     }
   }
@@ -111,9 +118,49 @@ const Login = memo(() => {
     try {
       await confirm.confirm(text);
       console.log("suvccess")
-      navigate('MainBottomTab')
+      //navigate('MainBottomTab')
     } catch (error) {
       console.log('Invalid code.');
+    }
+  }
+
+  const getMember = async () => {
+    let uid = auth().currentUser?.uid;
+
+    const querySnapshot = await firestore()
+      .collection('member')
+      .where('uid', '==', uid)
+      .get();
+
+    let member = null;
+    querySnapshot.forEach(documentSnapshot => {
+      if (documentSnapshot.data().uid === uid)
+        member = documentSnapshot.data()
+    });
+    addMember(member)
+  }
+
+  const createNewMember = async () => {
+    try {
+      console.log("create new member")
+      const update = {
+        displayName: firstName + ' ' + lastName,
+      };
+      await auth().currentUser.updateProfile(update);
+
+      firestore()
+        .collection('member')
+        .add({
+          uid: auth().currentUser.uid,
+          first_name: firstName,
+          last_name: lastName
+        })
+        .then(() => {
+          console.log('User added!');
+          navigate('MainBottomTab')
+        });
+    } catch (error) {
+
     }
   }
 
@@ -125,40 +172,67 @@ const Login = memo(() => {
   }, []);
 
   if (confirm != null) {
-    return (
-      <Container style={styles.container}>
-        <KeyboardAwareScrollView contentContainerStyle={styles.content}>
-          <Image source={Images.logo} />
-          <Text mt={24} category="h7" mb={72}>
-            Get Started
-          </Text>
-          <OtpInput
-            numberOfDigits={6}
-            onTextChange={(code) => setCode(code)}
-            focusStickBlinkingDuration={500}
-            onFilled={(text) => confirmCode(text)}
-            //onFilled={(text) => memberDetails()}
-            theme={{
-              pinCodeContainerStyle: {
-                borderRadius: 10,
-                height: 58,
-                width: 58,
-                borderBottomWidth: 2,
-              },
-              pinCodeTextStyle: {
-                color: "black",
-              }
-            }}
-          />
-          <Button
-            onPress={confirmCode()}
-            disabled={canContinue}
-            style={globalStyle.shadowBtn}>
-            Continue
-          </Button>
-        </KeyboardAwareScrollView>
-      </Container>
-    )
+    if (isNewUser) {
+      return (
+        <Container style={styles.container}>
+          <KeyboardAwareScrollView contentContainerStyle={styles.content}>
+            <Image source={Images.logo} />
+            <Text mt={24} category="h7" mb={72}>
+              This appears to be the first time we've seen you.
+              Please provide a first and last name.
+            </Text>
+            <Input
+              label='First Name'
+              style={styles.email}
+              value={firstName}
+              onChangeText={(e) => setFirstName(e)}
+            />
+            <Input
+              label='Last Name'
+              style={styles.email}
+              value={lastName}
+              onChangeText={(e) => setLastName(e)}
+            />
+            <Button
+              onPress={createNewMember}
+              disabled={canContinue}
+              style={globalStyle.shadowBtn}>
+              Continue
+            </Button>
+          </KeyboardAwareScrollView>
+        </Container>
+      )
+
+    } else {
+      return (
+        <Container style={styles.container}>
+          <KeyboardAwareScrollView contentContainerStyle={styles.content}>
+            <Image source={Images.logo} />
+            <Text mt={24} category="h7" mb={72}>
+              Get Started
+            </Text>
+            <OtpInput
+              numberOfDigits={6}
+              onTextChange={(code) => setCode(code)}
+              focusStickBlinkingDuration={500}
+              onFilled={(text) => confirmCode(text)}
+              //onFilled={(text) => memberDetails()}
+              theme={{
+                pinCodeContainerStyle: {
+                  borderRadius: 10,
+                  height: 58,
+                  width: 58,
+                  borderBottomWidth: 2,
+                },
+                pinCodeTextStyle: {
+                  color: "black",
+                }
+              }}
+            />
+          </KeyboardAwareScrollView>
+        </Container>
+      )
+    }
   }
 
   return (

@@ -12,11 +12,25 @@ import EmptyData from '../Components/EmptyData';
 import {Request_Type_Enum} from 'constants/Types';
 
 interface BookingsTabProps {
-  currentData: BookingItemProps[];
-  passData: BookingItemProps[];
+  available: Session[];
 }
 
-const BookingsTab = memo(({passData, currentData}: BookingsTabProps) => {
+type Session = {
+  id: string,
+  name: string,
+  location: string,
+  isBookable: boolean,
+  price: number,
+  date: Date,
+  dateString: string,
+  sessionDate: string //date, no time, used to search bookings   
+  //bookingString: string,
+  //people: number,
+  numberOfBookings: number,
+  //isAlreadyBooked: boolean,
+}
+
+const BookingsTab = memo(({available}: BookingsTabProps) => {
   const {navigate} =
     useNavigation<NavigationProp<MainBottomTabStackParamList>>();
   const styles = useStyleSheet(themedStyles);
@@ -31,7 +45,7 @@ const BookingsTab = memo(({passData, currentData}: BookingsTabProps) => {
 
   return (
     <View style={styles.container}>
-      {currentData === undefined && passData === undefined ? (
+      {available === undefined && available === undefined ? (
         <EmptyData
           image={Images.noBooking}
           title={t('request:noBooking')}
@@ -39,22 +53,22 @@ const BookingsTab = memo(({passData, currentData}: BookingsTabProps) => {
         />
       ) : (
         <>
-          {currentData.length > 0 ? (
+          {available.length > 0 ? (
             <>
-              <TitleList current dataLength={currentData.length} />
-              {currentData.map((item, i) => {
+              <TitleList current dataLength={available.length} />
+              {available.map((item, i) => {
                 return <BookingItem item={item} key={i} />;
               })}
             </>
           ) : null}
-          {passData.length > 0 ? (
+          {available.length > 0 ? (
             <View style={styles.passContent}>
               <TitleList
                 current={false}
-                dataLength={passData.length}
+                dataLength={available.length}
                 onSeeAll={onSeeAllPast}
               />
-              {passData.map((item, i) => {
+              {available.map((item, i) => {
                 return <BookingItem item={item} key={i} />;
               })}
             </View>

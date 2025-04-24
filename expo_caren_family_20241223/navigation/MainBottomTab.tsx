@@ -19,6 +19,7 @@ import FindScreen from "src/find/FindScreen";
 import MessagesScreen from "src/messages/MessagesScreen";
 import RequestsBottomNavigator from "./RequestsBottomNavigator";
 import MoreNavigator from "./MoreNavigator";
+import Sessions from 'src/sessions'
 
 interface ButtonTabProps {
   focused: boolean;
@@ -99,13 +100,13 @@ const MainBottomTab = memo(() => {
           }}
         />
         <BottomTab.Screen
-          name="Find"
-          component={FindScreen}
+          name="Sessions"
+          component={RequestsBottomNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
               <ButtonTab
                 focused={focused}
-                icon="search"
+                icon="bookmark"
                 numberNotification={undefined}
               />
             ),

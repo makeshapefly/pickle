@@ -1,8 +1,5 @@
-import { View, useWindowDimensions, StyleSheet, FlatList, SafeAreaView } from 'react-native'
+import { View, useWindowDimensions, StyleSheet, FlatList, SafeAreaView, Text } from 'react-native'
 import React, { useEffect } from 'react'
-import Header from '../../components/Header';
-import SessionCard from '../../components/SessionCard'
-import BookingCard from '@/components/BookingCard';
 import auth from '@react-native-firebase/auth';
 import firestore, { Filter, Timestamp, FieldValue, arrayUnion } from '@react-native-firebase/firestore';
 
@@ -31,7 +28,7 @@ type Booking = {
 }
 
 
-const Sessions = () => {
+const SessionsCopyScreen = () => {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
@@ -95,15 +92,7 @@ const Sessions = () => {
     }
   }
 
-  const removeFromAvailable = (id, sessionDate) => {
-    const index = sessionsBooked.findIndex((element) => element.id == id && element.date == sessionDate)
-    console.log("index: " + index)
-    sessionsAvailable.splice(index, 1)
-  }
-
   useEffect(() => {
-    //getSessionsForClub()
-    //bookedSessions()
     availableSessions()
   }, []);
 
@@ -242,29 +231,7 @@ const Sessions = () => {
 
   return (
     <SafeAreaView>
-      <Header title="Sessions" />
-      <FlatList
-        data={sessionsAvailable}
-        keyExtractor={(item, i) => i}
-        renderItem={({ item }) => (
-          <SessionCard
-            id={item.id}
-            name={item.name}
-            location={item.location}
-            date={item.date}
-            sessionDate={item.sessionDate}
-            dateString={item.dateString}
-            price={item.price}
-            bookings={item.bookings}
-            isBookable={item.isBookable}
-            //bookingsString={item.bookings + ' of ' + item.people}
-            bookingsString={"booking string"}
-            isAlreadyBooked={item.isAlreadyBooked}
-            numberOfBookings={item.numberOfBookings}
-            onPress={bookSession}
-          />
-        )}
-      />
+      <Text>Hello</Text>
     </SafeAreaView>
   )
 }
@@ -280,5 +247,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Sessions
-
+export default SessionsCopyScreen

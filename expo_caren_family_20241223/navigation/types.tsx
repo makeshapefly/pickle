@@ -49,7 +49,7 @@ export type CreateJobStackParamList = {
 };
 export type MainBottomTabStackParamList = {
   Home: undefined;
-  Find: undefined;
+  Sessions: undefined;
   Messages: undefined;
   Requests: NavigatorScreenParams<RequestsBottomStackParamList>;
   More: NavigatorScreenParams<MoreStackParamList>;

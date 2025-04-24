@@ -124,23 +124,17 @@ const Onboarding = memo(() => {
           <Button style={styles.login} status="outline" onPress={onLogin}>
             {t('auth:login')}
           </Button>
-          <Button
-            style={[styles.signup, globalStyle.shadowBtn]}
-            status="basic"
-            onPress={onSignup}>
-            {t('auth:sign_in').toString()}
-          </Button>
         </Flex>
       </Content>
       <Flex center mb={16}>
         <Text category="h8" status={'placeholder'}>
           {t('intro:find_a_job')}{' '}
         </Text>
-        <TouchableOpacity onPress={onGetHere} activeOpacity={0.54}>
+        {/*<TouchableOpacity onPress={onGetHere} activeOpacity={0.54}>
           <Text status={'link'} category="h8">
             {t('intro:get_here')}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Flex>
     </Container>
   );

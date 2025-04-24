@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import Text from 'components/Text';
 import {
@@ -17,48 +17,44 @@ import {
   WeekdaysProps,
 } from 'constants/Types';
 import Flex from 'components/Flex';
-import {globalStyle} from 'styles/globalStyle';
-import {t} from 'i18next';
+import { globalStyle } from 'styles/globalStyle';
+import { t } from 'i18next';
 import useLayout from 'hooks/useLayout';
 import dayjs from 'dayjs';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from 'navigation/types';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from 'navigation/types';
 import Weekdays from 'components/Weekdays';
 import OnlStatus from 'components/OnlStatus';
 
 export interface BookingItemProps {
-  user: UserProps;
-  type: Request_Status_Type_Enum;
-  onlineState: Onl_State_Types_Enum;
-  children: string[];
-  mile: number;
-  ageType: string;
-  startTime: Date | number;
-  meetingTime: string;
-  dayInWeek: WeekdaysProps[];
-  price: string;
-  location: string;
+  id: string,
+  name: string,
+  location: string,
+  isBookable: boolean,
+  price: number,
+  date: Date,
+  dateString: string,
+  people: number,
+  sessionDate: string //date, no time, used to search bookings   
+  //bookingString: string,
+  //people: number,
+  numberOfBookings: number,
+  //isAlreadyBooked: boolean,
 }
 
 export interface BookingProps {
   item: BookingItemProps;
 }
 
-const BookingItem = ({item}: BookingProps) => {
-  const {navigate} = useNavigation<NavigationProp<RootStackParamList>>();
+const BookingItem = ({ item }: BookingProps) => {
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const {width} = useLayout();
+  const { width } = useLayout();
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        navigate('RequestStack', {
-          screen: 'BookingDetails',
-          params: {type: item.type},
-        });
-      }}
       activeOpacity={0.54}>
       <Layout style={styles.container} level="1">
         <Flex
@@ -68,37 +64,35 @@ const BookingItem = ({item}: BookingProps) => {
           mh={16}
           style={globalStyle.shadow}>
           <Flex mr={8} style={styles.avatar}>
-            <Avatar source={item.user.avatar} size="medium" shape="square" />
-            <OnlStatus status={item.onlineState} />
+            {/*<Avatar source={item.user.avatar} size="medium" shape="square" />*/}
+           {/* <OnlStatus status={item.onlineState} /> */}
           </Flex>
           <View>
             <Text category="h7" maxWidth={231} bold>
-              {item.user.name}
+              {item.name}
             </Text>
             <Flex mt={8}>
               <Text category="h8" status={'warning'} bold>
                 {item.type}
               </Text>
-              {item.type === 'Unconfirmed' ? (
                 <Text category="h8" ml={8} mt={1} status={'placeholder'}>
                   19 hours left
                 </Text>
-              ) : null}
             </Flex>
           </View>
         </Flex>
         <Layout level={'2'} style={styles.bottom}>
           <Flex justify="flex-start" itemsCenter mb={8}>
             <Icon pack="assets" name="baby" style={styles.icon} />
-            {item.children.map((item, i) => {
+            {/*{item.children.map((item, i) => {
               return (
                 <Text category="h8" ml={8} key={i} bold>
                   {item}
                 </Text>
               );
-            })}
+            })} */}
             <Layout style={globalStyle.dot} level="5" />
-            <Text category="h8-s">{item.ageType}</Text>
+            <Text category="h8-s">{item.people}</Text>
           </Flex>
           <Flex justify="flex-start" itemsCenter mb={8}>
             <Icon pack="assets" name="location16" style={styles.icon} />
@@ -114,16 +108,16 @@ const BookingItem = ({item}: BookingProps) => {
                   Start
                 </Text>
                 <Text category="h8-s" status={'basic'}>
-                  {dayjs(item.startTime).format('ddd, MMM DD')}
+                  {dayjs(item.dateString).format('ddd, MMM DD')}
                 </Text>
-                <Weekdays data={item.dayInWeek} status="primary"/>
+               {/* <Weekdays data={item.dayInWeek} status="primary" /> */}
               </View>
               <View>
                 <Text category="h8" status={'placeholder'} bold>
                   Hours
                 </Text>
                 <Text category="h8-s" status={'basic'}>
-                  {item.meetingTime}
+                  {item.dateString}
                 </Text>
               </View>
             </Flex>
@@ -137,11 +131,11 @@ const BookingItem = ({item}: BookingProps) => {
                 },
               ]}>
               <Text category="h9" status={'primary'} bold>
-                {t('common:regularly')}
+                {'Book Session'}
               </Text>
             </View>
             <Text category="h3" bold>
-              {item.price}
+              £{item.price}
             </Text>
           </Flex>
         </Layout>
